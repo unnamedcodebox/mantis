@@ -4,6 +4,10 @@
 #include "../core/TitanParser.h"
 #include "../core/IsbParser.h"
 
+#include "../core/TimeReport.h"
+
+#include <QDebug>
+
 #include <gtest/gtest.h>
 
 #include <memory>
@@ -18,6 +22,7 @@ TEST(ParseOrdinaryMessage, Positive)
     auto ordinary = std::make_unique<mantis::OrdinaryParser>();
     auto parts = splitDatabaseMessage(message);
     auto parsedMessage = ordinary->parseMessage(parts);
+    qDebug() << parsedMessage;
     EXPECT_EQ(12, parts.size());
     EXPECT_EQ(QString{"СЦКУ № 1"}.toStdString(), parsedMessage[QString{"name"}].toStdString());
     EXPECT_EQ(QString{"Исправно"}.toStdString(), parsedMessage[QString{"state"}].toStdString());
@@ -31,6 +36,7 @@ TEST(ParseTitanMessage, Positive)
     auto titan = std::make_unique<mantis::TitanParser>();
     auto parts = splitDatabaseMessage(message);
     auto parsedMessage = titan->parseMessage(parts);
+    qDebug() << parsedMessage;
     EXPECT_EQ(12, parts.size());
     EXPECT_EQ(QString{"CДВ РПДУ Титан-М"}.toStdString(), parsedMessage[QString{"name"}].toStdString());
     EXPECT_EQ(QString{"Авария накала"}.toStdString(), parsedMessage[QString{"state"}].toStdString());

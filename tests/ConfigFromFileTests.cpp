@@ -40,7 +40,12 @@ TEST(readDeviceListFromConfigFile, Positive)
         ++counter;
     }
 
-    //xlsx.saveAs("/home/" + QString{} + "Documents/Reports/Test.xlsx");
+    auto path = QString{"/home/" + QString::fromStdString(std::string(getenv("USER"))) + "/Documents/Reports/"};
+    QDir dir(path);
+    if (!dir.exists()){
+      dir.mkpath(path);
+    }
+    xlsx.saveAs(path + "Test.xlsx");
 
     EXPECT_EQ(1, loudspeaker.size());
     EXPECT_EQ("1", std::string{getenv("USER")});

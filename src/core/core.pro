@@ -10,7 +10,8 @@ HEADERS += \
     TitanParser.h \
     OrdinaryParser.h \
     AppName.h \
-    SplitDatabaseMessage.h
+    SplitDatabaseMessage.h \
+    TimeReport.h
 
 SOURCES += \
     Database.cpp \
@@ -18,7 +19,8 @@ SOURCES += \
     IsbParser.cpp \
     TitanParser.cpp \
     OrdinaryParser.cpp \
-    SplitDatabaseMessage.cpp
+    SplitDatabaseMessage.cpp \
+    TimeReport.cpp
 
 LIBS += -lboost_filesystem -lboost_system
 

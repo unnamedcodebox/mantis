@@ -9,7 +9,8 @@ SOURCES += \
     main.cpp \
     ParserTests.cpp \
     DatabaseTests.cpp \
-    ConfigFromFileTests.cpp
+    ConfigFromFileTests.cpp \
+    TimeReportTests.cpp
 
 copydata.commands = $(COPY_DIR) $$PWD/config.json $$PWD/device_list.json $$OUT_PWD
 first.depends = $(first) copydata
