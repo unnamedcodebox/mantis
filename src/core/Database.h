@@ -33,16 +33,10 @@ public:
 
     Table sendQuery(const QString& query);
 
-    inline bool isOpened() const
-    {
-        return m_opened;
-    }
+    bool open();
 
 private:
-   boost::property_tree::ptree m_config;
    QSqlDatabase m_database;
-   QSqlQuery m_query;
-   bool m_opened = false;
 };
 
 } // namespace mantis

@@ -4,9 +4,9 @@ TARGET = mantis
 QT += quick core
 CONFIG += c++14
 
-DEPENDPATH += ../core
-INCLUDEPATH += ../core
-LIBS += -L../core/ -lcore -lboost_filesystem -lboost_system
+DEPENDPATH += ../config ../core
+INCLUDEPATH += ../config ../core
+LIBS += -L../core/ -lcore -lboost_filesystem -lboost_system -L../config/ -lconfig
 
 SOURCES += \
         main.cpp \

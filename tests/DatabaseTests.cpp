@@ -18,6 +18,12 @@ TEST(readDatabaseConfigFromFile, Positive)
     EXPECT_EQ(std::string{"127.0.0.1"}, config.get<std::string>("hostaddr"));
     EXPECT_EQ(std::string{"SBAJournal"}, config.get<std::string>("dbname"));
     EXPECT_EQ(std::string{"phpuser"}, config.get<std::string>("username"));
+    boost::optional<boost::property_tree::ptree&> pass
+        = config.get_child_optional("password");
+    if (pass)
+    {
+        EXPECT_EQ(std::string{ "" }, config.get<std::string>("password"));
+    }
 }
 
 TEST(createDatabaseFromConfig, Positive)
@@ -26,5 +32,5 @@ TEST(createDatabaseFromConfig, Positive)
     boost::property_tree::ptree config;
     boost::property_tree::read_json("config.json", config);
     auto database = Database(config);
-    EXPECT_EQ(false, database.isOpened());
+    EXPECT_EQ(false, database.open());
 }

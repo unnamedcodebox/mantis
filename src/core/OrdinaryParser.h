@@ -14,7 +14,6 @@
 #include <vector>
 #include <QString>
 
-
 namespace mantis
 {
 

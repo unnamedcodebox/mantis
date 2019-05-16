@@ -1,9 +1,10 @@
 TEMPLATE = app
 TARGET = mantis_tests
-QT += sql xlsx
-DEPENDPATH += . ../src/core
-INCLUDEPATH += ../src/core
-LIBS += -L../src/core/ -lcore -lgtest
+QT += sql xlsx core
+
+DEPENDPATH += . ../src/core ../src/config
+INCLUDEPATH += ../src/core ../src/config
+LIBS += -L../src/core/ -lcore -lgtest -L../src/config/ -lconfig
 
 SOURCES += \
     main.cpp \

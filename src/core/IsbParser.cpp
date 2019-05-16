@@ -17,6 +17,8 @@
 namespace mantis
 {
 
+//TODO: Add const strings
+
 IsbParser::IsbParser(
     std::map<QString, QString> placement,
     std::map<QString, QString> type,

@@ -9,10 +9,24 @@
 #include "OrdinaryParser.h"
 #include "SplitDatabaseMessage.h"
 
+#include <QDateTime>
+
 #include <QDebug>
 
 namespace mantis
 {
+
+const auto INPUT_DATE_FORMAT = QString{"ddd MMM dd hh:mm:ss yyyy"};
+const auto OUTPUT_DATE_FORMAT = QString{"dd-MM-yyyy hh:mm:ss"};
+
+auto parseDate(
+    const QString& date,
+    const QString& inputDateFormat,
+    const QString& outputDateFormat)
+{
+    auto dateTime = QDateTime::fromString(date, inputDateFormat);
+    return dateTime.toString(outputDateFormat);
+}
 
 ReportTable OrdinaryParser::parseTable(Table &table)
 {
@@ -42,9 +56,11 @@ OrdinaryParser::parseMessage(std::vector<QString>& message)
     message[10] = message[10].replace(QString(")"), "");
     message[10] = message[10].replace(QString("0 CODE "), "");
 
+    auto time = parseDate(message[2], INPUT_DATE_FORMAT, OUTPUT_DATE_FORMAT);
+
     auto data = std::map<QString, QString>{ { "name", message[9].trimmed() },
                                             { "state", message[10].trimmed() },
-                                          { "time", message[2] }};
+                                          { "time", time }};
     return data;
 }
 

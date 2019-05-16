@@ -10,9 +10,19 @@
 
 #include "Parser.h"
 
+#include <QStringList>
+
 namespace mantis
 {
 
-ReportTable createTimeReport(ReportTable& table);
+ReportTable createTimeReport(ReportTable& table, QStringList deviceList = QStringList{});
+
+class TimeReport
+{
+    TimeReport(ReportTable& table, QStringList& deviceList);
+private:
+    ReportTable m_table;
+    QStringList m_deviceList;
+};
 
 } // namespace mantis

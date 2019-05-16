@@ -2,6 +2,7 @@
 //#include "../src/core/OrdinaryParser.h"
 //#include "../src/core/TitanParser.h"
 //#include "../src/core/IsbParser.h"
+#include <QTranslator>
 
 #include <gtest/gtest.h>
 

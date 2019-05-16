@@ -1,0 +1,8 @@
+   48 ./TimeReportTests.cpp
+    5 ./mantis_tests.qrc
+   30 ./DatabaseTests.cpp
+    3 ./mantis_tests.txt
+   12 ./main.cpp
+   42 ./ConfigFromFileTests.cpp
+  150 ./ParserTests.cpp
+  290 total

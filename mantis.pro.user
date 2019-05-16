@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.8.2, 2019-05-09T23:00:32. -->
+<!-- Written by QtCreator 4.8.2, 2019-05-13T19:23:19. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -349,7 +349,10 @@
      <value type="int">14</value>
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
-    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
+    <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes">
+     <value type="QString">LANGUAGE=ru_RU:ru</value>
+     <value type="QString">LANG=ru_RU.UTF-8</value>
+    </valuelist>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">tests</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/amyasnikov/Documents/projects/mantis/tests/tests.pro</value>
