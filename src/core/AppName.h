@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <QString>
+
 namespace mantis
 {
 
@@ -16,5 +18,7 @@ enum class AppName
     ICS,
     PCS
 };
+
+QString getAppName(AppName name);
 
 } // namespace mantis

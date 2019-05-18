@@ -14,16 +14,45 @@
 
 namespace mantis
 {
+namespace
+{
 
-Database::Database(boost::property_tree::ptree config)
+const auto DRIVER = "driver";
+const auto HOST_ADDRESS = "hostaddr";
+const auto DB_NAME = "dbname";
+const auto USERNAME = "username";
+const auto PASSWORD = "password";
+
+QSqlDatabase createDatabase(boost::property_tree::ptree config)
 {
     if (!config.empty())
     {
-        m_database = QSqlDatabase::addDatabase("QPSQL");
-        m_database.setHostName("127.0.0.1");
-        m_database.setDatabaseName("SBAJournal");
-        m_database.setUserName("phpuser");
+        auto database = QSqlDatabase::addDatabase(
+            QString::fromStdString(config.get<std::string>(DRIVER)));
+        database.setHostName(
+            QString::fromStdString(config.get<std::string>(HOST_ADDRESS)));
+        database.setDatabaseName(
+            QString::fromStdString(config.get<std::string>(DB_NAME)));
+        database.setUserName(
+            QString::fromStdString(config.get<std::string>(USERNAME)));
+
+        boost::optional<boost::property_tree::ptree&> pass
+            = config.get_child_optional(PASSWORD);
+        if (pass)
+        {
+            database.setPassword(
+                QString::fromStdString(config.get<std::string>(PASSWORD)));
+        }
+
+        return database;
     }
+    return {};
+}
+} // namespace
+
+Database::Database(boost::property_tree::ptree config)
+{
+    m_database = createDatabase(config);
 }
 
 Table Database::sendQuery(const QString& query)
@@ -32,10 +61,7 @@ Table Database::sendQuery(const QString& query)
     {
         auto table = Table{};
         auto query = QSqlQuery{};
-        query.exec("SELECT \"msg\", \"timeReported\" FROM \"Event\" WHERE "
-                   "\"appName\"='ics' AND \"timeReported\">='01/03/2019' AND "
-                   "\"timeReported\"<'03/04/2019' AND \"msg\" LIKE "
-                   "'%failure(agent199, )%' ORDER BY \"timeReported\";");
+        query.exec();
 
         while (query.next())
         {

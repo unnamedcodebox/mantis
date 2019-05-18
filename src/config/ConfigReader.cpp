@@ -13,8 +13,7 @@ namespace mantis {
 QStringList readDeviceListFromFile(
     const std::string& fileName, const std::string& reportName)
 {
-    boost::property_tree::ptree config;
-    boost::property_tree::read_json(fileName, config);
+    auto config = config::fromFile(fileName);
     auto deviceTree = config.get_child(reportName);
     auto deviceList = QStringList{};
     for (auto& it: deviceTree)
