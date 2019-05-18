@@ -13,7 +13,6 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QString>
-#include <QRegExp>
 
 #include <boost/property_tree/ptree.hpp>
 
