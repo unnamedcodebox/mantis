@@ -16,11 +16,10 @@
 
 namespace mantis
 {
-
-namespace  {
-
-} // anonymous
-
+/**
+ * @brief The OrdinaryParser class using for parsing "ordinary" device groups:
+ * Commutation Station, SNMP, Loudspeaker
+ */
 class OrdinaryParser: public Parser
 {
 

@@ -17,6 +17,9 @@ namespace mantis
 
 namespace
 {
+/**
+ * Convert seconds to report time format
+ */
 QString secondsToTime(int value)
 {
     int day = value / (24 * 3600);
