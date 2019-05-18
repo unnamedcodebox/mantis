@@ -36,7 +36,7 @@ public:
      */
     void init();
 
-    Table sendQuery(const QString& query);
+    Table sendQuery(const QString& queryString);
 
     bool opened();
 

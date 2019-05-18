@@ -21,6 +21,9 @@ const auto DB_NAME = "dbname";
 const auto USERNAME = "username";
 const auto PASSWORD = "password";
 
+const auto TIME_REPORTED = "timeReported";
+const auto MESSAGE = "msg";
+
 void Database::init()
 {
     if (!m_config.empty())
@@ -51,21 +54,24 @@ Database::Database(boost::property_tree::ptree config):
    init();
 }
 
-Table Database::sendQuery(const QString& query)
+Table Database::sendQuery(const QString& queryString)
 {
     if (opened())
     {
         auto table = Table{};
         auto query = QSqlQuery{};
-        query.exec();
+        query.exec(queryString);
 
         while (query.next())
         {
-            QString timeReported = query.value("timeReported").toString();
-            QString msg = query.value("msg").toString();
+            auto part = std::map<QString, QString>();
+            part[TIME_REPORTED] = query.value(TIME_REPORTED).toString();
+            part[MESSAGE] = query.value(MESSAGE).toString();
+            table.push_back(part);
         }
-
+        return table;
     }
+    return {};
 }
 
 bool Database::opened()
