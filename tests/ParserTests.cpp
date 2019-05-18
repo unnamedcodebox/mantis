@@ -14,6 +14,12 @@
 
 using namespace mantis;
 
+TEST(getAppNameTestPositive, Positive)
+{
+    EXPECT_EQ("ics", getAppName(AppName::ICS).toStdString());
+    EXPECT_EQ("PCS", getAppName(AppName::PCS).toStdString());
+}
+
 TEST(ParseOrdinaryMessage, Positive)
 {
     auto message = QString(

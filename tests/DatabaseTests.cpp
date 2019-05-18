@@ -32,5 +32,5 @@ TEST(createDatabaseFromConfig, Positive)
     boost::property_tree::ptree config;
     boost::property_tree::read_json("config.json", config);
     auto database = Database(config);
-    EXPECT_EQ(false, database.open());
+    EXPECT_EQ(false, database.opened());
 }

@@ -31,12 +31,19 @@ class Database
 public:
     explicit Database(boost::property_tree::ptree config);
 
+    /**
+     * Init database connection
+     */
+    void init();
+
     Table sendQuery(const QString& query);
 
-    bool open();
+    bool opened();
 
 private:
-   QSqlDatabase m_database;
+    boost::property_tree::ptree m_config;
+    QSqlDatabase m_database;
+    bool m_opened = false;
 };
 
 } // namespace mantis

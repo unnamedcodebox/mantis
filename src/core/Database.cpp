@@ -14,8 +14,6 @@
 
 namespace mantis
 {
-namespace
-{
 
 const auto DRIVER = "driver";
 const auto HOST_ADDRESS = "hostaddr";
@@ -23,41 +21,39 @@ const auto DB_NAME = "dbname";
 const auto USERNAME = "username";
 const auto PASSWORD = "password";
 
-QSqlDatabase createDatabase(boost::property_tree::ptree config)
+void Database::init()
 {
-    if (!config.empty())
+    if (!m_config.empty())
     {
-        auto database = QSqlDatabase::addDatabase(
-            QString::fromStdString(config.get<std::string>(DRIVER)));
-        database.setHostName(
-            QString::fromStdString(config.get<std::string>(HOST_ADDRESS)));
-        database.setDatabaseName(
-            QString::fromStdString(config.get<std::string>(DB_NAME)));
-        database.setUserName(
-            QString::fromStdString(config.get<std::string>(USERNAME)));
+        m_database = QSqlDatabase::addDatabase(
+            QString::fromStdString(m_config.get<std::string>(DRIVER)));
+        m_database.setHostName(
+            QString::fromStdString(m_config.get<std::string>(HOST_ADDRESS)));
+        m_database.setDatabaseName(
+            QString::fromStdString(m_config.get<std::string>(DB_NAME)));
+        m_database.setUserName(
+            QString::fromStdString(m_config.get<std::string>(USERNAME)));
 
         boost::optional<boost::property_tree::ptree&> pass
-            = config.get_child_optional(PASSWORD);
+            = m_config.get_child_optional(PASSWORD);
         if (pass)
         {
-            database.setPassword(
-                QString::fromStdString(config.get<std::string>(PASSWORD)));
+            m_database.setPassword(
+                QString::fromStdString(m_config.get<std::string>(PASSWORD)));
         }
-
-        return database;
+        m_opened = m_database.open();
     }
-    return {};
 }
-} // namespace
 
-Database::Database(boost::property_tree::ptree config)
+Database::Database(boost::property_tree::ptree config):
+    m_config(std::move(config))
 {
-    m_database = createDatabase(config);
+   init();
 }
 
 Table Database::sendQuery(const QString& query)
 {
-    if (open())
+    if (opened())
     {
         auto table = Table{};
         auto query = QSqlQuery{};
@@ -72,9 +68,9 @@ Table Database::sendQuery(const QString& query)
     }
 }
 
-bool Database::open()
+bool Database::opened()
 {
-    return m_database.open();
+    return m_opened;
 }
 
 } // namespace mantis
