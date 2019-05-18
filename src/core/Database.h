@@ -24,9 +24,11 @@ namespace mantis
 
 using Table = std::vector<std::map<QString, QString>>;
 
+/**
+ * Class describes Database
+ */
 class Database
 {
-
 public:
     explicit Database(boost::property_tree::ptree config);
 
@@ -35,8 +37,14 @@ public:
      */
     void init();
 
+    /**
+     * Send query to database method, returns selected from database data
+     */
     Table sendQuery(const QString& queryString);
 
+    /**
+     * Method returns database opened status
+     */
     bool opened();
 
 private:

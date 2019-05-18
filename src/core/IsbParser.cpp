@@ -17,7 +17,13 @@
 namespace mantis
 {
 
-//TODO: Add const strings
+const auto PLACEMENT = "placement";
+const auto TYPE = "type";
+const auto THROUGH_ID = "throughId";
+const auto UNIQUE_ID = "uniqueId";
+const auto STATE = "state";
+const auto BATTERY_STATE = "batteryState";
+const auto TIME_REPORTED = "timeReported";
 
 IsbParser::IsbParser(
     std::map<QString, QString> placement,
@@ -37,13 +43,13 @@ ReportTable IsbParser::parseTable(Table& table)
     {
         auto parts = splitDatabaseMessage(row.at("msg"), AppName::PCS);
         auto data = parseMessage(parts);
-        reportTable.push_back({ data.at("placement"),
-                                data.at("type"),
-                                data.at("throughId"),
-                                data.at("uniqueId"),
-                                data.at("state"),
-                                data.at("batteryState"),
-                                row.at("timeReported") });
+        reportTable.push_back({ data.at(PLACEMENT),
+                                data.at(TYPE),
+                                data.at(THROUGH_ID),
+                                data.at(UNIQUE_ID),
+                                data.at(STATE),
+                                data.at(BATTERY_STATE),
+                                row.at(TIME_REPORTED) });
     }
 
     return reportTable;
@@ -126,9 +132,9 @@ IsbParser::parseMessage(std::vector<QString>& message)
     batteryState = (counter == 7) ? message[5] : "---";
 
     auto data = std::map<QString, QString>{
-        { "placement", placement }, { "type", type },
-        { "uniqueId", message[3] }, { "throughId", message[2] },
-        { "state", state },         { "batteryState", batteryState }
+        { PLACEMENT, placement }, { TYPE, type },
+        { UNIQUE_ID, message[3] }, { THROUGH_ID, message[2] },
+        { STATE, state },         { BATTERY_STATE, batteryState }
     };
 
     return data;
