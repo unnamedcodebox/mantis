@@ -38,6 +38,7 @@ public:
      */
     virtual std::map<QString,QString> parseMessage(std::vector<QString>& message) = 0;
 
-    virtual ~Parser(){}
+    virtual ~Parser() = default;
 };
+
 } // namespace mantis

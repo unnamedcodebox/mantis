@@ -16,7 +16,6 @@
 
 namespace mantis
 {
-
 const auto PLACEMENT = "placement";
 const auto TYPE = "type";
 const auto THROUGH_ID = "throughId";

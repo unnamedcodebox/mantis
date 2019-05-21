@@ -30,7 +30,7 @@ public:
      */
     virtual QString get() = 0;
 
-    virtual ~Query(){}
+    virtual ~Query() = default;
 };
 
 } // namespace mantis
