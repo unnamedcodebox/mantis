@@ -7,6 +7,7 @@
  */
 
 #include "ConfigReader.h"
+#include <QVariantMap>
 #include <QDebug>
 namespace mantis {
 
@@ -26,7 +27,7 @@ boost::property_tree::ptree fromFile(const std::string &fileName)
 }
 }
 
-std::vector<ReportInfo> readReportsConfiguration(const std::string &fileName)
+QVariantList readReportsConfiguration(const std::string &fileName)
 {
     const auto COMPONENTS = "components";
     const auto ID = "id";
@@ -35,15 +36,15 @@ std::vector<ReportInfo> readReportsConfiguration(const std::string &fileName)
 
     auto config = config::fromFile(fileName);
     auto deviceTree = config.get_child(COMPONENTS);
-    auto reportsConfiguration = std::vector<ReportInfo>{};
+    auto components = QVariantList{};
 
     for (auto& deviceNode: deviceTree)
     {
-        auto info = ReportInfo();
-        info.id
+        auto id
             = QString::fromStdString(deviceNode.second.get<std::string>(ID));
-        info.title
+        auto title
             = QString::fromStdString(deviceNode.second.get<std::string>(TITLE));
+        auto deviceList = QStringList{};
 
         boost::optional<boost::property_tree::ptree&> listExists
             = deviceNode.second.get_child_optional(DEVICE_LIST);
@@ -51,15 +52,15 @@ std::vector<ReportInfo> readReportsConfiguration(const std::string &fileName)
         {
             for (const auto& it: *listExists)
             {
-                info.deviceList.push_back(
+                deviceList.push_back(
                     QString::fromStdString(it.second.get_value<std::string>()));
             }
         }
-        reportsConfiguration.push_back(info);
+        components.push_back(QVariantMap{{ID, id},{TITLE, title},{DEVICE_LIST, deviceList}});
     }
 
-    qDebug() << reportsConfiguration;
-    return reportsConfiguration;
+qDebug() << components;
+    return components;
 }
 
 // config

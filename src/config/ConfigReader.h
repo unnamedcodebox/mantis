@@ -10,24 +10,13 @@
 
 #include <QString>
 #include <QStringList>
+#include <QVariantList>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-#include <iostream>
-
 namespace mantis
 {
-
-struct ReportInfo
-{
-    QString id;
-    QString title;
-    QStringList deviceList;
-
-    operator QString() const { return id + title + deviceList.join(" |"); }
-
-};
 
 namespace config
 {
@@ -41,6 +30,6 @@ boost::property_tree::ptree fromFile(const std::string& fileName);
 
 QStringList readDeviceListFromFile(const std::string& fileName, const std::string& reportName);
 
-std::vector<ReportInfo> readReportsConfiguration(const std::string& fileName);
+QVariantList readReportsConfiguration(const std::string& fileName);
 
 } // mantis
