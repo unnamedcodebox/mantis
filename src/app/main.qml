@@ -23,8 +23,9 @@ Window {
                 color: "#017ead"
             }
         }
-        ColumnLayout{id:mainLayout
-anchors.fill:parent
+        ColumnLayout {
+            id: mainLayout
+            anchors.fill: parent
             Label {
                 id: screenTitle
                 font.pixelSize: 42
@@ -53,27 +54,35 @@ anchors.fill:parent
             ColumnLayout {
                 id: checkboxColumn
                 Layout.fillWidth: true
+                Layout.alignment: Qt.AlignLeft
 
                 ListView {
-                    model: reportData
+                    id: listView
+                    model: titles
                     Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    Layout.margins: 10
+                    Layout.fillHeight: true
+                    Layout.margins: 10
                     clip: true
-                    delegate: checkBoxDelegate
-                }
 
-                Button {
-                    id: selectReport
-                    text: qsTr("Выбрать тип отчета")
+                    delegate: ItemDelegate {
+                        id: control
+                        text: modelData
+                        contentItem: Text {
+                            text: control.text
+                            font: control.font
+                            opacity: enabled ? 1.0 : 0.3
+                            color: listView.isCurrentItem ? "#AAAAAA" : "#FFFFFF"
+                        }
+                        highlighted: ListView.isCurrentItem
+                        onClicked: listView.currentIndex = index
+                    }
                 }
             }
 
-
-
-
+            Button {
+                id: selectReport
+                text: qsTr("Выбрать тип отчета")
+            }
         }
-
-
     }
 }

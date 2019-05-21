@@ -16,7 +16,7 @@ TEST(readDeviceListFromConfigFile, Positive)
     auto snmp = readDeviceListFromFile("device_list.json", "state_snmp");
     auto loudspeaker
         = readDeviceListFromFile("device_list.json", "state_loudspeaker");
-
+qDebug() << ruberoid;
     QXlsx::Document xlsx;
     auto counter = 1;
     for(auto& it : ruberoid)
@@ -39,4 +39,9 @@ TEST(readDeviceListFromConfigFile, Positive)
 //    qDebug() << ruberoid;
 //    qDebug() << snmp;
 //    qDebug() << loudspeaker;
+}
+
+TEST(readReportsConfiguration, Positive)
+{
+    auto configuration = mantis::readReportsConfiguration("device_list.json");
 }

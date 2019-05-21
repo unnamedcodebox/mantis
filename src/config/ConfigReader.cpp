@@ -13,17 +13,7 @@ namespace mantis {
 QStringList readDeviceListFromFile(
     const std::string& fileName, const std::string& reportName)
 {
-    auto config = config::fromFile(fileName);
-    auto deviceTree = config.get_child("commutation_station.device_list");
-//    auto deviceTree = settings.get_child("device_list");
-    auto deviceList = QStringList{};
-    for (auto& it: deviceTree)
-    {
-        deviceList.push_back(
-            QString::fromStdString(it.second.get_value<std::string>()));
-    }
-qDebug() << deviceList;
-    return deviceList;
+    return {};
 }
 namespace config
 {
@@ -34,6 +24,44 @@ boost::property_tree::ptree fromFile(const std::string &fileName)
 
     return config;
 }
-} // config
+}
+
+std::vector<ReportInfo> readReportsConfiguration(const std::string &fileName)
+{
+    const auto COMPONENTS = "components";
+    const auto ID = "id";
+    const auto TITLE = "title";
+    const auto DEVICE_LIST = "device_list";
+
+    auto config = config::fromFile(fileName);
+    auto deviceTree = config.get_child(COMPONENTS);
+    auto reportsConfiguration = std::vector<ReportInfo>{};
+
+    for (auto& deviceNode: deviceTree)
+    {
+        auto info = ReportInfo();
+        info.id
+            = QString::fromStdString(deviceNode.second.get<std::string>(ID));
+        info.title
+            = QString::fromStdString(deviceNode.second.get<std::string>(TITLE));
+
+        boost::optional<boost::property_tree::ptree&> listExists
+            = deviceNode.second.get_child_optional(DEVICE_LIST);
+        if(listExists)
+        {
+            for (const auto& it: *listExists)
+            {
+                info.deviceList.push_back(
+                    QString::fromStdString(it.second.get_value<std::string>()));
+            }
+        }
+        reportsConfiguration.push_back(info);
+    }
+
+    qDebug() << reportsConfiguration;
+    return reportsConfiguration;
+}
+
+// config
 
 } // mantis

@@ -27,7 +27,14 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     auto data = readDeviceListFromFile("device_list.json", "state_tech");
-    engine.rootContext()->setContextProperty("reportData", data);
+    auto configuration = readReportsConfiguration("device_list.json");
+    auto buttons = QStringList{};
+    for(auto& it : configuration)
+    {
+        buttons.push_back(it.title);
+    }
+    engine.rootContext()->setContextProperty("titles",buttons);
+    //engine.rootContext()->setContextProperty("reportData", data);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
