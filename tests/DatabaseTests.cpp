@@ -1,4 +1,6 @@
 #include "../core/Database.h"
+#include "../core/IsbQuery.h"
+#include <QtXlsx>
 
 #include <QDebug>
 
@@ -32,5 +34,20 @@ TEST(createDatabaseFromConfig, Positive)
     boost::property_tree::ptree config;
     boost::property_tree::read_json("config.json", config);
     auto database = Database(config);
+    auto query = IsbQuery(AppName::PCS, "01/03/2019", "01/04/2019");
     EXPECT_EQ(false, database.opened());
+    auto table = database.sendQuery(query.get());
+
+//    QXlsx::Document xlsx;
+//    auto counter = 1;
+//    for(auto& it : table)
+//    {
+//        xlsx.write("A" + QString::number(counter), it["timeReported"]);
+//        xlsx.write("B" + QString::number(counter), it["msg"]);
+//        ++counter;
+//    }
+
+
+//    xlsx.saveAs("isb.xlsx");
+
 }

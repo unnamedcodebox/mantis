@@ -30,7 +30,7 @@ TEST(readDeviceListFromConfigFile, Positive)
     if (!dir.exists()){
       dir.mkpath(path);
     }
-    xlsx.saveAs(path + "Test.xlsx");
+    xlsx.saveAs(path + "666Test.xlsx");
 
     EXPECT_EQ(1, loudspeaker.size());
     EXPECT_EQ("1", std::string{getenv("USER")});
