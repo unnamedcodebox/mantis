@@ -1,4 +1,4 @@
-import QtQuick 2.9
+import QtQuick 2.7
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
@@ -23,53 +23,57 @@ Window {
                 color: "#017ead"
             }
         }
-        Label {
-            id: screenTitle
-            font.pixelSize: 42
-            text: qsTr("ISP - Report Creator")
-            color: "#FFFFFF"
-            anchors.horizontalCenter: turboRect.horizontalCenter
-        }
-        Component {
-            id: checkBoxDelegate
-            CheckBox {
-                text: modelData
-                font.pixelSize: 18
-                id: control
-                contentItem: Text {
-                    text: control.text
-                    font: control.font
+        ColumnLayout{id:mainLayout
+anchors.fill:parent
+            Label {
+                id: screenTitle
+                font.pixelSize: 42
+                text: qsTr("ISP - Report Creator")
+                color: "#FFFFFF"
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            Component {
+                id: checkBoxDelegate
+                CheckBox {
+                    text: modelData
+                    font.pixelSize: 18
+                    id: control
+                    contentItem: Text {
+                        text: control.text
+                        font: control.font
 
-                    opacity: enabled ? 1.0 : 0.3
-                    color: control.down ? "#17a81a" : "#21be2b"
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    leftPadding: control.indicator.width + control.spacing
+                        opacity: enabled ? 1.0 : 0.3
+                        color: control.down ? "#17a81a" : "#21be2b"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        leftPadding: control.indicator.width + control.spacing
+                    }
                 }
             }
-        }
-        ColumnLayout {
-            id: checkboxColumn
-            anchors.top: screenTitle.bottom
-            anchors.fill: parent
-            anchors.topMargin: 15
-
-
-
-            ListView {
-                model: reportData
+            ColumnLayout {
+                id: checkboxColumn
                 Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                Layout.margins: 10
-                clip: true
-                delegate: checkBoxDelegate
+
+                ListView {
+                    model: reportData
+                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    Layout.margins: 10
+                    clip: true
+                    delegate: checkBoxDelegate
+                }
+
+                Button {
+                    id: selectReport
+                    text: qsTr("Выбрать тип отчета")
+                }
             }
 
-            Button {
-                id: selectReport
-                text: qsTr("Выбрать тип отчета")
-            }
+
+
+
         }
+
 
     }
 }
