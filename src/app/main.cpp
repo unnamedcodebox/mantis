@@ -16,9 +16,6 @@
 
 #include <memory>
 
-
-
-
 int main(int argc, char *argv[])
 {
     using namespace mantis;
@@ -34,12 +31,9 @@ int main(int argc, char *argv[])
     watcher->setConfiguration(components);
     engine.rootContext()->setContextProperty("components", components);
     engine.rootContext()->setContextProperty("watcher", watcher);
-    //engine.rootContext()->setContextProperty("reportData", data);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
-
-
 
     return app.exec();
 }
