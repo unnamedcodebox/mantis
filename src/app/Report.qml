@@ -31,17 +31,36 @@ Rectangle {
             id: checkBoxDelegate
             CheckBox {
                 text: modelData
-                font.pixelSize: 18
+
+                font.pixelSize: 14
                 id: control
                 contentItem: Text {
                     text: control.text
                     font: control.font
                     opacity: enabled ? 1.0 : 0.3
-                    color: control.down ? "#17a81a" : "#21be2b"
+                    color: control.down ? "#17a81a" : "#FFFFFF"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     leftPadding: control.indicator.width + control.spacing
+
                 }
+                indicator: Rectangle {
+                                implicitWidth: 20
+                                implicitHeight: 20
+                                x: control.leftPadding
+                                y: parent.height / 2 - height / 2
+                                radius: 3
+                                border.color: control.activeFocus ? "darkblue" : "gray"
+                                border.width: 1
+                                Rectangle {
+                                    visible: control.checked
+                                    color: "#555"
+                                    border.color: "#333"
+                                    radius: 1
+                                    anchors.margins: 4
+                                    anchors.fill: parent
+                                }
+                        }
             }
         }
         ColumnLayout {
@@ -69,7 +88,8 @@ Rectangle {
                 text: qsTr("Вернуться к выбору отчета")
                 onClicked: {
                     reportSwitcher.loadSwitcher()
-                }}
+                }
+            }
             Button {
                 id: createReport
                 text: qsTr("Сформировать отчет")
@@ -77,7 +97,6 @@ Rectangle {
                     watcher.buttonClicked(listView.indexed)
                 }
             }
-
         }
     }
 }
