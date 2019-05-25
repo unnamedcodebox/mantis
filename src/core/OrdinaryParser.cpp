@@ -16,6 +16,8 @@
 namespace mantis
 {
 
+namespace {
+
 const auto INPUT_DATE_FORMAT = QString{"ddd MMM dd hh:mm:ss yyyy"};
 const auto OUTPUT_DATE_FORMAT = QString{"dd-MM-yyyy hh:mm:ss"};
 
@@ -27,6 +29,7 @@ auto parseDate(
     auto dateTime = QDateTime::fromString(date, inputDateFormat);
     return dateTime.toString(outputDateFormat);
 }
+} // anonymous
 
 ReportTable OrdinaryParser::parseTable(Table &table)
 {

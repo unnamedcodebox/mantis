@@ -30,6 +30,8 @@ boost::property_tree::ptree fromFile(const std::string& fileName);
 
 QStringList readDeviceListFromFile(const std::string& fileName, const std::string& reportName);
 
+std::vector<std::map<QString, QString>> readTestTableFromFile(const std::string& fileName);
+
 QVariantList readReportsConfiguration(const std::string& fileName);
 
 } // mantis

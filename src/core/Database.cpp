@@ -54,7 +54,7 @@ Database::Database(boost::property_tree::ptree config):
    init();
 }
 
-Table Database::sendQuery(const QString& queryString)
+Table Database::sendQuery(const QString& queryString, bool selectTimeReported)
 {
     if (opened())
     {
@@ -65,7 +65,10 @@ Table Database::sendQuery(const QString& queryString)
         while (query.next())
         {
             auto part = std::map<QString, QString>();
-            part[TIME_REPORTED] = query.value(TIME_REPORTED).toString();
+            if(selectTimeReported)
+            {
+                part[TIME_REPORTED] = query.value(TIME_REPORTED).toString();
+            }
             part[MESSAGE] = query.value(MESSAGE).toString();
             table.push_back(part);
         }

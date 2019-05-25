@@ -40,7 +40,7 @@ public:
     /**
      * Send query to database method, returns selected from database data
      */
-    Table sendQuery(const QString& queryString);
+    Table sendQuery(const QString& queryString, bool selectTimeReported = true);
 
     /**
      * Method returns database opened status

@@ -14,7 +14,7 @@ SOURCES += \
     TimeReportTests.cpp \
     QueryTests.cpp
 
-copydata.commands = $(COPY_DIR) $$PWD/config.json $$PWD/device_list.json $$OUT_PWD
+copydata.commands = $(COPY_DIR) $$PWD/config.json $$PWD/device_list.json $$PWD/isbTests.json $$OUT_PWD
 first.depends = $(first) copydata
 export(first.depends)
 export(copydata.commands)

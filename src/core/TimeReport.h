@@ -15,7 +15,9 @@
 namespace mantis
 {
 
-ReportTable createTimeReport(ReportTable& table, QStringList deviceList = QStringList{});
+ReportTable createTimeReportTable(ReportTable& table, QStringList deviceList = QStringList{});
+ReportTable createTitanTimeReportTable(ReportTable& table);
+ReportTable createIsbTimeReportTable(ReportTable& table);
 
 class TimeReport
 {

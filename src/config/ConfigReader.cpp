@@ -60,7 +60,26 @@ QVariantList readReportsConfiguration(const std::string &fileName)
     }
 
 qDebug() << components;
-    return components;
+return components;
+}
+
+std::vector<std::map<QString, QString> > readTestTableFromFile(const std::string &fileName)
+{
+    auto config = config::fromFile(fileName);
+    auto tests = config.get_child("testsTable");
+    auto entrys = std::vector<std::map<QString, QString>>{};
+
+    for (auto& testEntry: tests)
+    {
+        auto msg
+            = QString::fromStdString(testEntry.second.get<std::string>("msg"));
+        auto timeReported
+            = QString::fromStdString(testEntry.second.get<std::string>("timeReported"));
+
+        entrys.push_back({{"msg", msg}, {"timeReported", timeReported}});
+    }
+
+    return entrys;
 }
 
 // config

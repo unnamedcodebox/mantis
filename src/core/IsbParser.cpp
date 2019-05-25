@@ -132,7 +132,7 @@ IsbParser::parseMessage(std::vector<QString>& message)
 
     auto data = std::map<QString, QString>{
         { PLACEMENT, placement }, { TYPE, type },
-        { UNIQUE_ID, message[3] }, { THROUGH_ID, message[2] },
+        { THROUGH_ID, message[2] }, { UNIQUE_ID, message[3] },
         { STATE, state },         { BATTERY_STATE, batteryState }
     };
 
