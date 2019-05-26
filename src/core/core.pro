@@ -41,7 +41,12 @@ HEADERS += \
     QueryOrdinary.h \
     TitanQuery.h \
     IsbQuery.h \
-    Watcher.h
+    Watcher.h \
+    Report.h \
+    OrdinaryReport.h \
+    TitanReport.h \
+    IsbReport.h \
+    Properties.h
 
 SOURCES += \
     Database.cpp \
@@ -55,7 +60,10 @@ SOURCES += \
     TitanQuery.cpp \
     AppName.cpp \
     IsbQuery.cpp \
-    Watcher.cpp
+    Watcher.cpp \
+    OrdinaryReport.cpp \
+    TitanReport.cpp \
+    IsbReport.cpp
 
 LIBS += -lboost_filesystem -lboost_system
 

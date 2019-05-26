@@ -1,0 +1,7 @@
+{
+"driver": "QPSQL",
+"hostaddr" : "172.31.1.226",
+"dbname" : "SBAJournal",
+"username" : "phpuser",
+"password" : "11011"
+}

@@ -16,7 +16,7 @@
 
 #include <memory>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     using namespace mantis;
 
@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     auto data = readDeviceListFromFile("device_list.json", "state_tech");
     auto components = readReportsConfiguration("device_list.json");
+    auto databaseConfig = config::fromFile("config.json");
+    auto database = std::make_unique<Database>(databaseConfig);
 
     auto watcher = new Watcher();
     watcher->setConfiguration(components);
@@ -34,6 +36,5 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
-
     return app.exec();
 }

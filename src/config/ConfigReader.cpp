@@ -31,6 +31,8 @@ QVariantList readReportsConfiguration(const std::string &fileName)
 {
     const auto COMPONENTS = "components";
     const auto ID = "id";
+    const auto GROUP = "group";
+    const auto ORDINARY = "ordinary";
     const auto TITLE = "title";
     const auto DEVICE_LIST = "device_list";
 
@@ -44,19 +46,24 @@ QVariantList readReportsConfiguration(const std::string &fileName)
             = QString::fromStdString(deviceNode.second.get<std::string>(ID));
         auto title
             = QString::fromStdString(deviceNode.second.get<std::string>(TITLE));
+        auto group
+            = QString::fromStdString(deviceNode.second.get<std::string>(GROUP));
         auto deviceList = QStringList{};
 
         boost::optional<boost::property_tree::ptree&> listExists
             = deviceNode.second.get_child_optional(DEVICE_LIST);
-        if(listExists)
+        if(group == ORDINARY)
         {
             for (const auto& it: *listExists)
             {
                 deviceList.push_back(
                     QString::fromStdString(it.second.get_value<std::string>()));
             }
+        components.push_back(QVariantMap{{ID, id},{GROUP, group},{TITLE, title},{DEVICE_LIST, deviceList}});
         }
-        components.push_back(QVariantMap{{ID, id},{TITLE, title},{DEVICE_LIST, deviceList}});
+        else {
+            components.push_back(QVariantMap{{ID, id},{GROUP, group},{TITLE, title}});
+        }
     }
 
 qDebug() << components;

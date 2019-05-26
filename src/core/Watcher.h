@@ -14,6 +14,8 @@ public:
     int getIndex();
 public slots:
     void buttonClicked(int index);
+    void reportPropertiesSetted(QString beginDate, QString endDate, QString reportId, QString subtype);
+    void takeVariantMap(QVariantMap map);
 signals:
     void reportSwitched();
     void indexSwitched(int index);
