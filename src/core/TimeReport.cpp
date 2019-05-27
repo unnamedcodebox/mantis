@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QString>
 
+#include <set>
 namespace mantis
 {
 
