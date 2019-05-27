@@ -4,6 +4,7 @@
 #include "../core/OrdinaryParser.h"
 #include "../core/TitanParser.h"
 #include "../core/IsbParser.h"
+#include "../core/ReportManager.h"
 #include "../core/Watcher.h"
 
 #include <QDebug>
@@ -24,16 +25,22 @@ int main(int argc, char* argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
     auto data = readDeviceListFromFile("device_list.json", "state_tech");
     auto components = readReportsConfiguration("device_list.json");
-    auto databaseConfig = config::fromFile("config.json");
-    auto database = std::make_unique<Database>(databaseConfig);
 
-    auto watcher = new Watcher();
+    auto databaseConfig = config::fromFile("config.json");
+    auto database = std::make_shared<Database>(databaseConfig);
+
+    auto reportManager = std::make_shared<ReportManager>(database);
+    auto watcher = std::make_shared<Watcher>();
     watcher->setConfiguration(components);
+
     engine.rootContext()->setContextProperty("components", components);
-    engine.rootContext()->setContextProperty("watcher", watcher);
+    engine.rootContext()->setContextProperty("watcher", watcher.get());
+    engine.rootContext()->setContextProperty("reportManager", reportManager.get());
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
     if (engine.rootObjects().isEmpty())
         return -1;
     return app.exec();

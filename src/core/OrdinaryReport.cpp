@@ -11,6 +11,18 @@
 namespace mantis
 {
 
+using namespace report_properties;
+
+OrdinaryReport::OrdinaryReport(QString title, QString subtype, QString beginDate, QString endDate, QStringList deviceList):
+    m_title(std::move(title)),
+    m_subtype(std::move(subtype)),
+    m_beginDate(std::move(beginDate)),
+    m_endDate(std::move(endDate)),
+    m_deviceList(std::move(deviceList))
+{
+
+}
+
 QString OrdinaryReport::title()
 {
     return m_title;
@@ -18,7 +30,7 @@ QString OrdinaryReport::title()
 
 QString OrdinaryReport::subtype()
 {
-
+    return m_subtype;
 }
 
 QString OrdinaryReport::beginDate()

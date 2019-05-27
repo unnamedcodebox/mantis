@@ -10,6 +10,19 @@
 
 namespace mantis
 {
+using namespace report_properties;
+
+TitanReport::TitanReport(
+    QString title,
+    QString subtype,
+    QString beginDate,
+    QString endDate)
+    : m_title(std::move(title))
+    , m_subtype(std::move(subtype))
+    , m_beginDate(std::move(beginDate))
+    , m_endDate(std::move(endDate))
+{
+}
 
 QString TitanReport::title()
 {

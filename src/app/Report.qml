@@ -160,6 +160,7 @@ Rectangle {
                                                    endDate.text,
                                                    reportId, subtype)
                     watcher.takeVariantMap(reportInfo)
+                    reportManager.createReport(reportInfo)
                 }
             }
         }

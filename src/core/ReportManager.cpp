@@ -28,19 +28,21 @@ namespace mantis
 {
 
 using namespace device_groups;
+using namespace report_properties;
 
 namespace {
 
 std::unique_ptr<Query> createQuery(
-    const QString& group,
-    const QString& beginDate,
-    const QString& endDate,
-    const QStringList& deviceList = QStringList{})
+    QVariantMap reportInfo)
 {
     std::unique_ptr<Query> query;
+    auto group = getReportProperty(reportInfo, GROUP);
+    auto beginDate = getReportProperty(reportInfo, BEGIN_DATE);
+    auto endDate = getReportProperty(reportInfo, END_DATE);
 
     if (group == ORDINARY)
     {
+        auto deviceList = getDeviceList(reportInfo);
         query.reset(
             new QueryOrdinary(AppName::ICS, deviceList, beginDate, endDate));
     }
@@ -75,54 +77,75 @@ std::unique_ptr<Parser> createParser(const QString& group)
 }
 
 std::unique_ptr<Report> createReportFactoryMethod(
-    const QString& group,
-    const QString& title,
-    const QString& beginDate,
-    const QString endDate,
-    const QStringList& deviceList)
+    QVariantMap reportInfo)
 {
     std::unique_ptr<Report> report;
+    auto group = getReportProperty(reportInfo, GROUP);
+    auto title = getReportProperty(reportInfo, TITLE);
+    auto beginDate = getReportProperty(reportInfo, BEGIN_DATE);
+    auto endDate = getReportProperty(reportInfo, END_DATE);
+    auto subtype = getReportProperty(reportInfo, SUB_TYPE);
 
     if (group == ORDINARY)
     {
-        report.reset(new OrdinaryReport());
+        auto deviceList = getDeviceList(reportInfo);
+        report.reset(new OrdinaryReport(title, subtype, beginDate, endDate, deviceList));
     }
     else if (group == TITAN)
     {
-        report.reset(new TitanReport());
+        report.reset(new TitanReport(title, subtype, beginDate, endDate));
     }
     else if (group == ISB)
     {
-        report.reset(new IsbReport());
+        report.reset(new IsbReport(title, subtype, beginDate, endDate));
     }
     return report;
 }
 
 } // namespace
 
+ReportManager::ReportManager(std::shared_ptr<Database> database):
+    m_database(std::move(database))
+{
+
+}
+
 void ReportManager::createReport(QVariantMap reportInfo)
 {
     using namespace report_properties;
-    auto id = reportInfo[report_properties::ID].toString();
-    auto group = reportInfo[report_properties::GROUP].toString();
-    auto title = reportInfo[report_properties::TITLE].toString();
-    auto subtype = reportInfo[report_properties::SUB_TYPE].toString();
-    auto beginDate = reportInfo[report_properties::BEGIN_DATE].toString();
-    auto endDate = reportInfo[report_properties::END_DATE].toString();
-    auto deviceList = QStringList{};
-    if (group == ORDINARY)
-    {
-        auto deviceList
-            = reportInfo[report_properties::DEVICE_LIST].toStringList();
-    }
-    auto query = createQuery(group, beginDate, endDate, deviceList);
-    auto parser = createParser(group);
-    auto report = createReportFactoryMethod(
-        group, title, beginDate, endDate, deviceList);
-    qDebug() << group;
 
-//    auto deviceList = map["device_list"].toStringList();
-//    qDebug() << "this is my deviceList" << deviceList;
+    auto group = getReportProperty(reportInfo, GROUP);
+    // todo: add update method
+    m_query = createQuery(reportInfo);
+    m_parser = createParser(group);
+    m_report = createReportFactoryMethod(reportInfo);
+    // todo: add create report method
+    auto table = m_database->sendQuery(m_query->get());
+    auto reportTable = m_parser->parseTable(table);
+    // todo: add write report method
+    qDebug() << m_query->get();
+
+//    if(m_report->subtype() == report_subtypes::TIME_REPORT)
+//    {
+//        reportTable = m_report->createTimeReportTable(reportTable);
+//    }
+//    else {
+//        m_report->setReportTable
+//    }
+//    m_report->
+
+    //    auto deviceList = map["device_list"].toStringList();
+    //    qDebug() << "this is my deviceList" << deviceList;
+}
+
+void ReportManager::update()
+{
+
+}
+
+void ReportManager::reportToFile()
+{
+
 }
 
 } // namespace mantis

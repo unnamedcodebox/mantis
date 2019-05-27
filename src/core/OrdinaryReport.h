@@ -10,6 +10,8 @@
 
 #include "Report.h"
 
+#include "Properties.h"
+
 #include <QString>
 #include <QStringList>
 
@@ -23,6 +25,13 @@ class OrdinaryReport: public Report
 {
 
 public:
+    OrdinaryReport(
+        QString title,
+        QString subtype,
+        QString beginDate,
+        QString endDate,
+        QStringList deviceList);
+
     /**
      * Reimplemented from Report
      */
@@ -50,6 +59,7 @@ public:
 
 private:
     QString m_title;
+    QString m_subtype;
     QString m_beginDate;
     QString m_endDate;
     QStringList m_deviceList;

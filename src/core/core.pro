@@ -63,7 +63,8 @@ SOURCES += \
     Watcher.cpp \
     OrdinaryReport.cpp \
     TitanReport.cpp \
-    IsbReport.cpp
+    IsbReport.cpp \
+    Properties.cpp
 
 LIBS += -lboost_filesystem -lboost_system
 

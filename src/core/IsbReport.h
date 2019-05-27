@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Report.h"
+#include "Properties.h"
 
 #include <QString>
 #include <QStringList>
@@ -17,12 +18,15 @@ namespace mantis
 {
 
 /**
- * Class describes Report for group Ordinary
+ * Class describes Report for ISB system
  */
 class IsbReport: public Report
 {
 
 public:
+    IsbReport(
+        QString title, QString subtype, QString beginDate, QString endDate);
+
     /**
      * Reimplemented from Report
      */
@@ -31,7 +35,7 @@ public:
     /**
      * Reimplemented from Report
      */
-    virtual QString subtype();
+    virtual QString subtype() override;
 
     /**
      * Reimplemented from Report
@@ -50,6 +54,7 @@ public:
 
 private:
     QString m_title;
+    QString m_subtype;
     QString m_beginDate;
     QString m_endDate;
     ReportTable m_reportTable;

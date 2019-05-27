@@ -11,6 +11,7 @@
 #include "AppName.h"
 
 #include <QString>
+#include <QVariantMap>
 
 namespace mantis
 {
@@ -56,6 +57,10 @@ const auto BEGIN_DATE = "begin_date";
 const auto END_DATE = "end_date";
 const auto SUB_TYPE = "sub_type";
 const auto DEVICE_LIST = "device_list";
+
+QString getReportProperty(QVariantMap reportInfo, QString property);
+
+QStringList getDeviceList(QVariantMap reportInfo);
 
 } // namespace report_properties
 

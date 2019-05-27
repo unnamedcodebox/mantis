@@ -15,6 +15,7 @@
 
 namespace mantis
 {
+
 /**
  * Class implements query for ISB system
  */

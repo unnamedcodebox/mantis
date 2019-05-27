@@ -32,6 +32,6 @@ void mantis::Watcher::takeVariantMap(QVariantMap map)
     qDebug() << "this is map" << map;
     auto deviceList = map["device_list"].toStringList();
     qDebug() << "this is my deviceList" << deviceList;
-    auto reportManager = std::make_unique<ReportManager>();
-    reportManager->createReport(map);
+//    auto reportManager = std::make_unique<ReportManager>();
+//    reportManager->createReport(map);
 }
