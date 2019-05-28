@@ -43,6 +43,11 @@ QString OrdinaryReport::endDate()
     return m_endDate;
 }
 
+void OrdinaryReport::setReportTable(ReportTable &table)
+{
+    m_reportTable = table;
+}
+
 void OrdinaryReport::createTimeReportTable(ReportTable& table)
 {
     // TODO

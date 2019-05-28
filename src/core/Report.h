@@ -49,6 +49,11 @@ public:
     virtual QString endDate() = 0;
 
     /**
+     * Set report table
+     */
+    virtual void setReportTable(ReportTable& table) = 0;
+
+    /**
      * Create time report table
      */
     virtual void createTimeReportTable(ReportTable& table) = 0;

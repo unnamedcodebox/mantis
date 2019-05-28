@@ -41,6 +41,11 @@ QString IsbReport::endDate()
     return m_endDate;
 }
 
+void IsbReport::setReportTable(ReportTable &table)
+{
+    m_reportTable = table;
+}
+
 void IsbReport::createTimeReportTable(ReportTable& table)
 {
     // TODO

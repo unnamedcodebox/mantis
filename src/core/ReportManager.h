@@ -34,9 +34,9 @@ public slots:
      */
     void createReport(QVariantMap reportInfo);
 
-    void update();
+//    void update();
 
-    void reportToFile();
+//    void reportToFile();
 
 private:
     std::shared_ptr<Database> m_database;

@@ -55,6 +55,11 @@ public:
     /**
      * Reimplemented from Report
      */
+    virtual void setReportTable(ReportTable& table);
+
+    /**
+     * Reimplemented from Report
+     */
     virtual void createTimeReportTable(ReportTable& table) override;
 
 private:

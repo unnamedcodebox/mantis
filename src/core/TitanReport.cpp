@@ -44,6 +44,11 @@ QString TitanReport::endDate()
     return m_endDate;
 }
 
+void TitanReport::setReportTable(ReportTable &table)
+{
+    m_reportTable = table;
+}
+
 void TitanReport::createTimeReportTable(ReportTable& table)
 {
     // TODO

@@ -122,30 +122,19 @@ void ReportManager::createReport(QVariantMap reportInfo)
     // todo: add create report method
     auto table = m_database->sendQuery(m_query->get());
     auto reportTable = m_parser->parseTable(table);
+    m_report->setReportTable(reportTable);
     // todo: add write report method
     qDebug() << m_query->get();
 
-//    if(m_report->subtype() == report_subtypes::TIME_REPORT)
-//    {
-//        reportTable = m_report->createTimeReportTable(reportTable);
-//    }
-//    else {
-//        m_report->setReportTable
-//    }
-//    m_report->
+    if(m_report->subtype() == report_subtypes::TIME_REPORT)
+    {
+        m_report->createTimeReportTable(reportTable);
+    }
+
+    //todo: add file writer
 
     //    auto deviceList = map["device_list"].toStringList();
     //    qDebug() << "this is my deviceList" << deviceList;
-}
-
-void ReportManager::update()
-{
-
-}
-
-void ReportManager::reportToFile()
-{
-
 }
 
 } // namespace mantis
