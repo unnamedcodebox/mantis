@@ -12,6 +12,7 @@
 #include "Query.h"
 #include "Parser.h"
 #include "Report.h"
+#include "ReportWriter.h"
 
 #include <QObject>
 #include <QVariantMap>
@@ -29,6 +30,7 @@ public:
     ReportManager(std::shared_ptr<Database> database);
 
 public slots:
+
     /**
      * Create report based on report info: id, title, group etc
      */
@@ -42,7 +44,8 @@ private:
     std::shared_ptr<Database> m_database;
     std::unique_ptr<Query> m_query;
     std::unique_ptr<Parser> m_parser;
-    std::unique_ptr<Report> m_report;
+    std::shared_ptr<Report> m_report;
+    std::unique_ptr<ReportWriter> m_writer;
 
 };
 

@@ -1,5 +1,5 @@
 TEMPLATE = lib
-QT += sql
+QT += sql xlsx
 CONFIG += c++14
 
 

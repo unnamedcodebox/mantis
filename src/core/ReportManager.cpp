@@ -76,10 +76,10 @@ std::unique_ptr<Parser> createParser(const QString& group)
     return parser;
 }
 
-std::unique_ptr<Report> createReportFactoryMethod(
+std::shared_ptr<Report> createReportFactoryMethod(
     QVariantMap reportInfo)
 {
-    std::unique_ptr<Report> report;
+    std::shared_ptr<Report> report;
     auto group = getReportProperty(reportInfo, GROUP);
     auto title = getReportProperty(reportInfo, TITLE);
     auto beginDate = getReportProperty(reportInfo, BEGIN_DATE);
@@ -130,6 +130,12 @@ void ReportManager::createReport(QVariantMap reportInfo)
     {
         m_report->createTimeReportTable(reportTable);
     }
+
+    auto headersType
+        = group == ORDINARY || TITAN ? Headers::STANDARD : Headers::ISB;
+
+    m_writer = std::make_unique<ReportWriter>(headersType);
+    m_writer->writeReportToFile(m_report);
 
     //todo: add file writer
 
