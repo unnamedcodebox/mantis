@@ -25,12 +25,17 @@ class TitanReport: public Report
 {
 
 public:
-
     TitanReport(
+        QString id,
         QString title,
         QString subtype,
         QString beginDate,
         QString endDate);
+
+    /**
+     * Reimplemented from Report
+     */
+    virtual QString id() override;
 
     /**
      * Reimplemented from Report
@@ -55,6 +60,11 @@ public:
     /**
      * Reimplemented from Report
      */
+    virtual const ReportTable& getReportTable() const override;
+
+    /**
+     * Reimplemented from Report
+     */
     virtual void setReportTable(ReportTable& table);
 
     /**
@@ -63,6 +73,7 @@ public:
     virtual void createTimeReportTable(ReportTable& table) override;
 
 private:
+    QString m_id;
     QString m_title;
     QString m_subtype;
     QString m_beginDate;

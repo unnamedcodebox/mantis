@@ -39,6 +39,16 @@ const auto ISB = "isb";
 
 } // namespace device_groups
 
+namespace device_id
+{
+const auto COMMUTATION_STATION = "commutation_station";
+const auto SNMP = "snmp";
+const auto LOUDSPEAKER = "loudspeaker";
+const auto TITAN = "titan";
+const auto ISB_ID = "isb";
+
+}
+
 namespace report_subtypes
 {
 

@@ -13,12 +13,22 @@ namespace mantis
 using namespace report_properties;
 
 IsbReport::IsbReport(
-    QString title, QString subtype, QString beginDate, QString endDate)
-    : m_title(std::move(title))
+    QString id,
+    QString title,
+    QString subtype,
+    QString beginDate,
+    QString endDate)
+    : m_id(std::move(id))
+    , m_title(std::move(title))
     , m_subtype(std::move(subtype))
     , m_beginDate(std::move(beginDate))
     , m_endDate(std::move(endDate))
 {
+}
+
+QString IsbReport::id()
+{
+    return m_id;
 }
 
 QString IsbReport::title()
@@ -39,6 +49,11 @@ QString IsbReport::beginDate()
 QString IsbReport::endDate()
 {
     return m_endDate;
+}
+
+const ReportTable &IsbReport::getReportTable() const
+{
+    return m_reportTable;
 }
 
 void IsbReport::setReportTable(ReportTable &table)

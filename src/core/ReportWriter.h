@@ -15,6 +15,11 @@
 
 #include <memory>
 
+namespace QXlsx
+{
+class Document;
+}
+
 namespace mantis
 {
 
@@ -30,14 +35,17 @@ enum class Headers : int
 class ReportWriter
 {
 public:
-    explicit ReportWriter(Headers type);
+
+    explicit ReportWriter(std::shared_ptr<Report> report);
+
     /**
      * Method using for writing report to file
      */
-    void writeReportToFile(const std::shared_ptr<Report>& report);
+    void writeReportToFile();
+
 private:
-    Headers m_headersType;
-    QString m_info;
+    std::shared_ptr<Report> m_report;
+    std::shared_ptr<QXlsx::Document> m_document;
 
 };
 

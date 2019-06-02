@@ -26,11 +26,17 @@ class OrdinaryReport: public Report
 
 public:
     OrdinaryReport(
+        QString id,
         QString title,
         QString subtype,
         QString beginDate,
         QString endDate,
         QStringList deviceList);
+
+    /**
+     * Reimplemented from Report
+     */
+    virtual QString id() override;
 
     /**
      * Reimplemented from Report
@@ -55,7 +61,12 @@ public:
     /**
      * Reimplemented from Report
      */
-    virtual void setReportTable(ReportTable& table);
+    virtual const ReportTable& getReportTable() const override;
+
+    /**
+     * Reimplemented from Report
+     */
+    virtual void setReportTable(ReportTable& table) override;
 
     /**
      * Reimplemented from Report
@@ -63,6 +74,7 @@ public:
     virtual void createTimeReportTable(ReportTable& table) override;
 
 private:
+    QString m_id;
     QString m_title;
     QString m_subtype;
     QString m_beginDate;

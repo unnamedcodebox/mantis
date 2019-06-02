@@ -79,8 +79,8 @@ std::unique_ptr<Parser> createParser(const QString& group)
 std::shared_ptr<Report> createReportFactoryMethod(
     QVariantMap reportInfo)
 {
-    std::shared_ptr<Report> report;
     auto group = getReportProperty(reportInfo, GROUP);
+    auto id = getReportProperty(reportInfo, ID);
     auto title = getReportProperty(reportInfo, TITLE);
     auto beginDate = getReportProperty(reportInfo, BEGIN_DATE);
     auto endDate = getReportProperty(reportInfo, END_DATE);
@@ -89,17 +89,17 @@ std::shared_ptr<Report> createReportFactoryMethod(
     if (group == ORDINARY)
     {
         auto deviceList = getDeviceList(reportInfo);
-        report.reset(new OrdinaryReport(title, subtype, beginDate, endDate, deviceList));
+        return std::make_shared<OrdinaryReport>(id, title, subtype, beginDate, endDate, deviceList);
     }
     else if (group == TITAN)
     {
-        report.reset(new TitanReport(title, subtype, beginDate, endDate));
+        return std::make_shared<TitanReport>(id, title, subtype, beginDate, endDate);
     }
     else if (group == ISB)
     {
-        report.reset(new IsbReport(title, subtype, beginDate, endDate));
+        return std::make_shared<IsbReport>(id, title, subtype, beginDate, endDate);
     }
-    return report;
+    return {};
 }
 
 } // namespace
@@ -126,21 +126,15 @@ void ReportManager::createReport(QVariantMap reportInfo)
     // todo: add write report method
     qDebug() << m_query->get();
 
-    if(m_report->subtype() == report_subtypes::TIME_REPORT)
+    if (m_report->subtype() == report_subtypes::TIME_REPORT)
     {
         m_report->createTimeReportTable(reportTable);
     }
 
-    auto headersType
-        = group == ORDINARY || TITAN ? Headers::STANDARD : Headers::ISB;
-
-    m_writer = std::make_unique<ReportWriter>(headersType);
-    m_writer->writeReportToFile(m_report);
+    m_writer = std::make_unique<ReportWriter>(m_report);
+    m_writer->writeReportToFile();
 
     //todo: add file writer
-
-    //    auto deviceList = map["device_list"].toStringList();
-    //    qDebug() << "this is my deviceList" << deviceList;
 }
 
 } // namespace mantis

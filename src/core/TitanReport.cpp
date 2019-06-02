@@ -13,15 +13,22 @@ namespace mantis
 using namespace report_properties;
 
 TitanReport::TitanReport(
+    QString id,
     QString title,
     QString subtype,
     QString beginDate,
     QString endDate)
-    : m_title(std::move(title))
+    : m_id(std::move(id))
+    , m_title(std::move(title))
     , m_subtype(std::move(subtype))
     , m_beginDate(std::move(beginDate))
     , m_endDate(std::move(endDate))
 {
+}
+
+QString TitanReport::id()
+{
+    return m_id;
 }
 
 QString TitanReport::title()
@@ -42,6 +49,11 @@ QString TitanReport::beginDate()
 QString TitanReport::endDate()
 {
     return m_endDate;
+}
+
+const ReportTable &TitanReport::getReportTable() const
+{
+    return m_reportTable;
 }
 
 void TitanReport::setReportTable(ReportTable &table)

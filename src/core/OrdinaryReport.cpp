@@ -13,14 +13,25 @@ namespace mantis
 
 using namespace report_properties;
 
-OrdinaryReport::OrdinaryReport(QString title, QString subtype, QString beginDate, QString endDate, QStringList deviceList):
-    m_title(std::move(title)),
-    m_subtype(std::move(subtype)),
-    m_beginDate(std::move(beginDate)),
-    m_endDate(std::move(endDate)),
-    m_deviceList(std::move(deviceList))
+OrdinaryReport::OrdinaryReport(
+    QString id,
+    QString title,
+    QString subtype,
+    QString beginDate,
+    QString endDate,
+    QStringList deviceList)
+    : m_id(std::move(id))
+    , m_title(std::move(title))
+    , m_subtype(std::move(subtype))
+    , m_beginDate(std::move(beginDate))
+    , m_endDate(std::move(endDate))
+    , m_deviceList(std::move(deviceList))
 {
+}
 
+QString OrdinaryReport::id()
+{
+    return m_id;
 }
 
 QString OrdinaryReport::title()
@@ -41,6 +52,11 @@ QString OrdinaryReport::beginDate()
 QString OrdinaryReport::endDate()
 {
     return m_endDate;
+}
+
+const ReportTable &OrdinaryReport::getReportTable() const
+{
+    return m_reportTable;
 }
 
 void OrdinaryReport::setReportTable(ReportTable &table)

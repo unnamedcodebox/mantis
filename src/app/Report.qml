@@ -153,6 +153,7 @@ Rectangle {
                         "end_date": endDate.text,
                         "group": components[watcher.m_index].group,
                         "title": components[watcher.m_index].title,
+                        "id": components[watcher.m_index].id,
                         "sub_type": subtype,
                         "device_list": reportDeviceList
                     }

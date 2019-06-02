@@ -29,6 +29,11 @@ class Report
 
 public:
     /**
+     * Get report id
+     */
+    virtual QString id() = 0;
+
+    /**
      * Get report title
      */
     virtual QString title() = 0;
@@ -47,6 +52,11 @@ public:
      * Get report end date
      */
     virtual QString endDate() = 0;
+
+    /**
+     * Get report table
+     */
+    virtual const ReportTable& getReportTable() const = 0;
 
     /**
      * Set report table
