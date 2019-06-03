@@ -8,6 +8,7 @@
 
 #include "Database.h"
 
+#include <QDebug>
 #include <QtSql/QSql>
 #include <QStringList>
 #include <QVariant>
@@ -45,6 +46,7 @@ void Database::init()
                 QString::fromStdString(m_config.get<std::string>(PASSWORD)));
         }
         m_opened = m_database.open();
+        qDebug() << "CONNECTED TO DATABASE: " << m_opened;
     }
 }
 
@@ -61,6 +63,7 @@ Table Database::sendQuery(const QString& queryString, bool selectTimeReported)
         auto table = Table{};
         auto query = QSqlQuery{};
         query.exec(queryString);
+        qDebug() << queryString;
 
         while (query.next())
         {
@@ -72,6 +75,7 @@ Table Database::sendQuery(const QString& queryString, bool selectTimeReported)
             part[MESSAGE] = query.value(MESSAGE).toString();
             table.push_back(part);
         }
+        qDebug() << "this is table" << table;
         return table;
     }
     return {};

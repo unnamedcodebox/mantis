@@ -47,7 +47,7 @@ const auto LOUDSPEAKER = "loudspeaker";
 const auto TITAN = "titan";
 const auto ISB_ID = "isb";
 
-}
+} // namespace device_id
 
 namespace report_subtypes
 {
@@ -73,5 +73,22 @@ QString getReportProperty(QVariantMap reportInfo, QString property);
 QStringList getDeviceList(QVariantMap reportInfo);
 
 } // namespace report_properties
+
+namespace date_format
+{
+
+const auto INPUT_DATE_FORMAT = QString{ "ddd MMM dd hh:mm:ss yyyy" };
+const auto OUTPUT_DATE_FORMAT = QString{ "dd-MM-yyyy hh:mm:ss" };
+
+using TimeStateTable
+    = std::map<QString, std::map<QString, std::map<QString, int>>>;
+using TitanTimeStateTalbe = std::map<QString, std::map<QString, int>>;
+
+/**
+ * Convert seconds to report time format
+ */
+QString secondsToTime(int value);
+
+} // namespace date_format
 
 } // namespace mantis

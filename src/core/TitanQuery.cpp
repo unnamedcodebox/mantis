@@ -32,7 +32,7 @@ void TitanQuery::init()
         m_beginDate.length() > 0 ? "AND \"timeReported\">='" + m_beginDate + "'"
                                  : "");
     parts.push_back("AND \"timeReported\"<='" + m_endDate + "'");
-    parts.push_back("AND \"msg\" LIKE '%failure(agent199, )'");
+    parts.push_back("AND \"msg\" LIKE '%failure(agent199, )%'");
     parts.push_back("ORDER BY \"timeReported\";");
 
     m_query = parts.join(" ");

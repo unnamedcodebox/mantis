@@ -38,17 +38,19 @@ ReportTable IsbParser::parseTable(Table& table)
 {
     auto reportTable = ReportTable{};
 
-    for(const auto& row : table)
+    for (const auto& row: table)
     {
         auto parts = splitDatabaseMessage(row.at("msg"), AppName::PCS);
         auto data = parseMessage(parts);
-        reportTable.push_back({ data.at(PLACEMENT),
-                                data.at(TYPE),
-                                data.at(THROUGH_ID),
-                                data.at(UNIQUE_ID),
-                                data.at(STATE),
-                                data.at(BATTERY_STATE),
-                                row.at(TIME_REPORTED) });
+        auto timeReported = row.at(TIME_REPORTED);
+        reportTable.push_back(
+            { data.at(PLACEMENT),
+              data.at(TYPE),
+              data.at(THROUGH_ID),
+              data.at(UNIQUE_ID),
+              data.at(STATE),
+              data.at(BATTERY_STATE),
+              timeReported.replace("T", " ").remove(".000") });
     }
 
     return reportTable;

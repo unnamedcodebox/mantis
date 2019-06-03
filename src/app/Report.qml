@@ -166,4 +166,28 @@ Rectangle {
             }
         }
     }
+    BusyIndicator{id: indicator
+        running: false
+    Connections{target: createReport
+    onClicked:{indicator.running = true}}
+    Connections{target: reportManager
+    onReportCreated: indicator.running = false}}
+
+    Popup {
+        id: reportCreated
+        x: 100
+        y: 100
+        width: 200
+        height: 300
+        modal: true
+        Text {
+            id: contentText
+            text: qsTr("text")
+        }
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+        visible: false
+        Connections{target:reportManager
+            onReportCreated:reportCreated.visible = true;
+    }}
 }

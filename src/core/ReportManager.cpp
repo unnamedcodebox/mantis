@@ -32,6 +32,8 @@ using namespace report_properties;
 
 namespace {
 
+const auto SUCCESS_MESSAGE = QObject::tr("Report successfully created");
+
 std::unique_ptr<Query> createQuery(
     QVariantMap reportInfo)
 {
@@ -121,10 +123,12 @@ void ReportManager::createReport(QVariantMap reportInfo)
     m_report = createReportFactoryMethod(reportInfo);
     // todo: add create report method
     auto table = m_database->sendQuery(m_query->get());
+    qDebug() << "THIS IS DATABASE TABLE" << table;
     auto reportTable = m_parser->parseTable(table);
+    qDebug() << "THIS IS REPORT TABLE" << reportTable;
     m_report->setReportTable(reportTable);
     // todo: add write report method
-    qDebug() << m_query->get();
+    //qDebug() << m_query->get();
 
     if (m_report->subtype() == report_subtypes::TIME_REPORT)
     {
@@ -133,6 +137,8 @@ void ReportManager::createReport(QVariantMap reportInfo)
 
     m_writer = std::make_unique<ReportWriter>(m_report);
     m_writer->writeReportToFile();
+
+    emit reportCreated(SUCCESS_MESSAGE);
 
     //todo: add file writer
 }

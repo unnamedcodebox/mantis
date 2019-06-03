@@ -36,7 +36,6 @@ HEADERS += \
     OrdinaryParser.h \
     AppName.h \
     SplitDatabaseMessage.h \
-    TimeReport.h \
     Query.h \
     QueryOrdinary.h \
     TitanQuery.h \
@@ -56,7 +55,6 @@ SOURCES += \
     TitanParser.cpp \
     OrdinaryParser.cpp \
     SplitDatabaseMessage.cpp \
-    TimeReport.cpp \
     QueryOrdinary.cpp \
     TitanQuery.cpp \
     AppName.cpp \

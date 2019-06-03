@@ -36,6 +36,9 @@ public slots:
      */
     void createReport(QVariantMap reportInfo);
 
+signals:
+    void reportCreated(QString message);
+
 private:
     std::shared_ptr<Database> m_database;
     std::unique_ptr<Query> m_query;
