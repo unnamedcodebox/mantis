@@ -16,8 +16,7 @@
 namespace mantis
 {
 /**
- * Class using for implement query for ordinary devices components: Commutation
- * Station, SNMP and Loudspeaker
+ * Class using for implement query for ordinary devices
  */
 class QueryOrdinary: public Query
 {

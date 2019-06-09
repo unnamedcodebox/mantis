@@ -36,7 +36,7 @@ TEST(InitTitanQuery, Positive)
         = QString{ "SELECT \"msg\", \"timeReported\" FROM \"Event\" WHERE "
                    "\"appName\"='ics' AND \"timeReported\">='01/06/2019' AND "
                    "\"timeReported\"<='01/07/2019' AND \"msg\" LIKE "
-                   "'%failure(agent199, )' ORDER BY \"timeReported\";" };
+                   "'%failure(agent199, )%' ORDER BY \"timeReported\";" };
     EXPECT_EQ(excepted.toStdString(), query->get().toStdString());
 }
 

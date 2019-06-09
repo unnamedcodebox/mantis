@@ -64,6 +64,7 @@ Table Database::sendQuery(const QString& queryString, bool selectTimeReported)
         auto query = QSqlQuery{};
         query.exec(queryString);
         qDebug() << queryString;
+        //m_database.close();
 
         while (query.next())
         {
@@ -76,6 +77,7 @@ Table Database::sendQuery(const QString& queryString, bool selectTimeReported)
             table.push_back(part);
         }
         qDebug() << "this is table" << table;
+
         return table;
     }
     return {};

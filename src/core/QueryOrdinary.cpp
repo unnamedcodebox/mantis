@@ -8,6 +8,8 @@
 
 #include "QueryOrdinary.h"
 
+#include <QObject>
+
 namespace mantis
 {
 
@@ -32,7 +34,7 @@ void QueryOrdinary::init()
     parts.push_back(
         m_beginDate.length() > 0 ? "AND \"timeReported\">='" + m_beginDate+ "'" : "");
     parts.push_back("AND \"timeReported\"<='" + m_endDate + "'");
-    parts.push_back("AND \"msg\" LIKE '%Обновление состояния%'");
+    parts.push_back("AND \"msg\" LIKE " + QObject::tr("'%State update%'"));
     parts.push_back("AND \"msg\" SIMILAR to '%(" + devices + ")%'");
     parts.push_back("ORDER BY \"timeReported\";");
 

@@ -9,6 +9,7 @@
 
 #include "IsbParser.h"
 #include "SplitDatabaseMessage.h"
+#include <QObject>
 
 #include <QRegExp>
 
@@ -16,6 +17,7 @@
 
 namespace mantis
 {
+
 const auto PLACEMENT = "placement";
 const auto TYPE = "type";
 const auto THROUGH_ID = "throughId";
@@ -24,33 +26,66 @@ const auto STATE = "state";
 const auto BATTERY_STATE = "batteryState";
 const auto TIME_REPORTED = "timeReported";
 
-IsbParser::IsbParser(
-    std::map<QString, QString> placement,
-    std::map<QString, QString> type,
-    std::map<QString, QString> subsystemId)
-    : m_placement(std::move(placement))
-    , m_equipmentType(std::move(type))
-    , m_subsystemId(std::move(subsystemId))
+IsbParser::IsbParser()
+    : m_placement({ { "UPR", QObject::tr("Control building") },
+                    { "TZ", QObject::tr("Technical building") },
+                    { "KPP", QObject::tr("Control checkpoint") },
+                    { "KTP", QObject::tr("Control Transport checkpoint") },
+                    { "AP", QObject::tr("Aerials pavillion") } })
+    , m_equipmentType({
+          { "PCS", QObject::tr("Control state device") },
+          { "PC", QObject::tr("SPVM") },
+          { "SVI", QObject::tr("Videoserver") },
+          { "SW", QObject::tr("Commutator") },
+          { "SOP", QObject::tr("Server OPS") },
+          { "AS", QObject::tr("Television IP-Camera" )},
+          { "ARK", QObject::tr("Central processor block") },
+          { "UPS", QObject::tr("Uninterrupted power supply") },
+      })
 {
 }
 
 ReportTable IsbParser::parseTable(Table& table)
 {
     auto reportTable = ReportTable{};
+    auto deviceStates = std::map<std::vector<QString>, QString>{};
 
     for (const auto& row: table)
     {
         auto parts = splitDatabaseMessage(row.at("msg"), AppName::PCS);
         auto data = parseMessage(parts);
         auto timeReported = row.at(TIME_REPORTED);
-        reportTable.push_back(
-            { data.at(PLACEMENT),
-              data.at(TYPE),
-              data.at(THROUGH_ID),
-              data.at(UNIQUE_ID),
-              data.at(STATE),
-              data.at(BATTERY_STATE),
-              timeReported.replace("T", " ").remove(".000") });
+        auto deviceName = std::vector<QString>{ data.at(PLACEMENT),
+                                                data.at(TYPE),
+                                                data.at(THROUGH_ID),
+                                                data.at(UNIQUE_ID) };
+        if(deviceStates.find(deviceName) == deviceStates.end())
+        {
+            reportTable.push_back(
+                { data.at(PLACEMENT),
+                  data.at(TYPE),
+                  data.at(THROUGH_ID),
+                  data.at(UNIQUE_ID),
+                  data.at(STATE),
+                  data.at(BATTERY_STATE),
+                  timeReported.replace("T", " ").remove(".000") });
+            deviceStates[deviceName] = data.at(STATE);
+        }
+        else {
+            if (deviceStates.at(deviceName) != data.at(STATE))
+            {
+                reportTable.push_back(
+                    { data.at(PLACEMENT),
+                      data.at(TYPE),
+                      data.at(THROUGH_ID),
+                      data.at(UNIQUE_ID),
+                      data.at(STATE),
+                      data.at(BATTERY_STATE),
+                      timeReported.replace("T", " ").remove(".000") });
+                deviceStates[deviceName] = data.at(STATE);
+            }
+        }
+
     }
 
     return reportTable;
@@ -77,24 +112,6 @@ IsbParser::parseMessage(std::vector<QString>& message)
         {
             auto contains = message[0].contains(encode.first, Qt::CaseInsensitive);
 
-            //        auto match
-            //            = QRegExp(encode.first, Qt::CaseInsensitive,
-            //            QRegExp::Wildcard)
-            //                  .indexIn(message[0]);
-            //        if (match == 0)
-            //        {
-            //            if (encode.first == message[0])
-            //            {
-            //                placement = encode.second;
-            //                break;
-            //            }
-            //            else
-            //            {
-            //                placement
-            //                    = message[0].replace(QRegExp(encode.first),
-            //                    encode.second);
-            //            }
-            //        }
             if (contains)
             {
                 if (QString::
@@ -114,13 +131,10 @@ IsbParser::parseMessage(std::vector<QString>& message)
 
     type = m_equipmentType[message[1]];
 
-    //    auto idFind = m_subsystemBitIdentifier.find(message[4])
-    //    subsystemId = m_subsystemBitIdentifier[]
-
     switch (counter)
     {
     case 5:
-        state = "Исправно";
+        state = QObject::tr("OK");
         break;
     case 6:
         state = message[5];

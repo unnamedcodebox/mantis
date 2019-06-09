@@ -19,18 +19,19 @@ Rectangle {
     ColumnLayout {
         id: mainLayout
         anchors.fill: parent
+        anchors.margins: 10
         Label {
             id: screenTitle
             font.pixelSize: 42
-            text: qsTr("ISP - Report Creator")
+            Layout.alignment: Qt.AlignHCenter
+            text: qsTr("IaRS - Report creation")
             color: "#FFFFFF"
-            anchors.horizontalCenter: parent.horizontalCenter
         }
 
         ColumnLayout {
             id: checkboxColumn
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignLeft
+            Layout.alignment: Qt.AlignHCenter
 
             ListView {
                 id: listView
@@ -38,20 +39,22 @@ Rectangle {
                 property int indexed: 0
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.maximumWidth: parent
                 Layout.margins: 10
                 clip: true
 
                 delegate: RadioDelegate {
                     id: control
                     text: modelData.title
+                    width: parent.width
                     contentItem: Text {
                         text: control.text
                         font: control.font
+
                         wrapMode: Text.WordWrap
-                        width: 500
                         opacity: enabled ? 1.0 : 0.3
                         color: listView.isCurrentItem ? "#AAAAAA" : "#FFFFFF"
-                        horizontalAlignment: Text.AlignHCenter
+                        horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         leftPadding: control.indicator.width + control.spacing
                     }
@@ -83,9 +86,11 @@ Rectangle {
 
         Button {
             id: selectReport
-            text: qsTr("Выбрать тип отчета")
+            Layout.leftMargin: 15
+            Layout.bottomMargin: 15
+            text: qsTr("Choose report type")
             onClicked: {
-                watcher.buttonClicked(listView.indexed)
+                uiController.buttonClicked(listView.indexed)
             }
         }
     }

@@ -8,7 +8,7 @@
 
 #include "ConfigReader.h"
 #include <QVariantMap>
-#include <QDebug>
+
 namespace mantis {
 
 QStringList readDeviceListFromFile(
@@ -34,6 +34,7 @@ QVariantList readReportsConfiguration(const std::string &fileName)
     const auto GROUP = "group";
     const auto ORDINARY = "ordinary";
     const auto TITLE = "title";
+    const auto SHORTNAME = "shortname";
     const auto DEVICE_LIST = "device_list";
 
     auto config = config::fromFile(fileName);
@@ -48,6 +49,8 @@ QVariantList readReportsConfiguration(const std::string &fileName)
             = QString::fromStdString(deviceNode.second.get<std::string>(TITLE));
         auto group
             = QString::fromStdString(deviceNode.second.get<std::string>(GROUP));
+        auto shortname = QString::fromStdString(
+            deviceNode.second.get<std::string>(SHORTNAME));
         auto deviceList = QStringList{};
 
         boost::optional<boost::property_tree::ptree&> listExists
@@ -59,14 +62,13 @@ QVariantList readReportsConfiguration(const std::string &fileName)
                 deviceList.push_back(
                     QString::fromStdString(it.second.get_value<std::string>()));
             }
-        components.push_back(QVariantMap{{ID, id},{GROUP, group},{TITLE, title},{DEVICE_LIST, deviceList}});
+            components.push_back(QVariantMap{{ID, id},{GROUP, group},{TITLE, title},{SHORTNAME, shortname}, {DEVICE_LIST, deviceList}});
         }
         else {
-            components.push_back(QVariantMap{{ID, id},{GROUP, group},{TITLE, title}});
+            components.push_back(QVariantMap{{ID, id},{GROUP, group},{TITLE, title}, {SHORTNAME, shortname},});
         }
     }
 
-qDebug() << components;
 return components;
 }
 

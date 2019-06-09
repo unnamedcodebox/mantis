@@ -144,9 +144,7 @@ void IsbReport::createTimeReportTable(ReportTable& table)
         {
             auto time = secondsToTime(stateKey.second.at("delta"));
             auto stateCounter
-                = /*(stateKey.first == QString{ "Исправно" }
-                       ? QString{ "---" }
-                       :*/ QString::number(stateKey.second.at("stateCounter"))/*)*/;
+                = QString::number(stateKey.second.at("stateCounter"));
             if (previousDeviceKey != deviceKey.first)
             {
                 tempArr.push_back(
@@ -156,14 +154,10 @@ void IsbReport::createTimeReportTable(ReportTable& table)
             {
                 tempArr.push_back(
                     { deviceKey.first, stateKey.first, stateCounter, time });
-                // array_push(tempArr, array(":::", stateKey,
-                // timeValue["stateCounter"], time));
             }
             previousDeviceKey = deviceKey.first;
         }
     }
-    // dateTimeReport->setData(tempArr);
-    // return dateTimeReport;
 
     m_reportTable = std::move(tempArr);
 }

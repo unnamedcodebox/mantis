@@ -26,7 +26,8 @@ namespace mantis
 enum class Headers : int
 {
     STANDARD,
-    ISB
+    ISB,
+    TITAN
 };
 
 /**
@@ -43,9 +44,16 @@ public:
      */
     void writeReportToFile();
 
+    /**
+     * Get created report path
+     */
+    QString createdReportPath();
+
+
 private:
     std::shared_ptr<Report> m_report;
     std::shared_ptr<QXlsx::Document> m_document;
+    QString m_reportPath;
 
 };
 

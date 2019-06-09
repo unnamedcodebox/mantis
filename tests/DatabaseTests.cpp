@@ -15,7 +15,7 @@ TEST(readDatabaseConfigFromFile, Positive)
 {
     using namespace mantis;
     boost::property_tree::ptree config;
-    boost::property_tree::read_json("testconfig.json", config);
+    boost::property_tree::read_json("config.json", config);
     EXPECT_EQ(std::string{"QPSQL"}, config.get<std::string>("driver"));
     EXPECT_EQ(std::string{"127.0.0.1"}, config.get<std::string>("hostaddr"));
     EXPECT_EQ(std::string{"SBAJournal"}, config.get<std::string>("dbname"));
@@ -32,22 +32,7 @@ TEST(createDatabaseFromConfig, Positive)
 {
     using namespace mantis;
     boost::property_tree::ptree config;
-    boost::property_tree::read_json("testconfig.json", config);
+    boost::property_tree::read_json("config.json", config);
     auto database = Database(config);
     auto query = IsbQuery(AppName::PCS, "01/03/2019", "01/04/2019");
-//    EXPECT_EQ(false, database.opened());
-//    auto table = database.sendQuery(query.get());
-
-//    QXlsx::Document xlsx;
-//    auto counter = 1;
-//    for(auto& it : table)
-//    {
-//        xlsx.write("A" + QString::number(counter), it["timeReported"]);
-//        xlsx.write("B" + QString::number(counter), it["msg"]);
-//        ++counter;
-//    }
-
-
-//    xlsx.saveAs("isb.xlsx");
-
 }

@@ -10,7 +10,7 @@
 #include "SplitDatabaseMessage.h"
 
 #include <QDateTime>
-
+#include <QObject>
 #include <QDebug>
 
 namespace mantis
@@ -31,16 +31,31 @@ auto parseDate(
 }
 } // anonymous
 
-ReportTable OrdinaryParser::parseTable(Table &table)
+ReportTable OrdinaryParser::parseTable(Table& table)
 {
     auto reportTable = ReportTable{};
-
-    for(const auto& row : table)
+    auto deviceStates = std::map<QString, QString>();
+    for (auto& row: table)
     {
         auto parts = splitDatabaseMessage(row.at("msg"));
         auto data = parseMessage(parts);
-//        reportTable.push_back({data.at("name"), data.at("state"), row.at("timeReported")});
-        reportTable.push_back({data.at("name"), data.at("state"), data.at("time")});
+
+        if (deviceStates.find(data.at("name")) != deviceStates.end())
+        {
+            if (deviceStates.at(data.at("name")) != data.at("state"))
+            {
+                reportTable.push_back(
+                    { data.at("name"), data.at("state"), data.at("time") });
+                deviceStates[data.at("name")] = data.at("state");
+            }
+        }
+        else
+        {
+
+            reportTable.push_back(
+                { data.at("name"), data.at("state"), data.at("time") });
+            deviceStates[data.at("name")] = data.at("state");
+        }
     }
 
     return reportTable;
@@ -51,7 +66,7 @@ OrdinaryParser::parseMessage(std::vector<QString>& message)
 {
     qDebug() << message;
 
-    message[9] = message[9].replace(QString("Обновление состояния:"), "");
+    message[9] = message[9].replace(QObject::tr("State update:"), "");
     message[9] = message[9].replace(QString("("), "");
     message[9] = message[9].replace(QString(")"), "");
     message[9] = message[9].replace(QString(","), "");

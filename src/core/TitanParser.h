@@ -14,24 +14,13 @@
 #include <vector>
 #include <QString>
 
-
 namespace mantis
 {
-
-namespace  {
-
-std::map<int, QString> initStates
-    = { { 0, "Исправно" },          { 1, "Авария охлаждения" },
-        { 2, "Авария накала" },     { 3, "Перегрев" },
-        { 4, "Авария пневматики" }, { 5, "Авария сеть" } };
-
-} // anonymous
 
 class TitanParser: public Parser
 {
 
 public:
-    explicit TitanParser(std::map<int, QString> states = initStates);
 
     /**
      * Reimplemented from Parser

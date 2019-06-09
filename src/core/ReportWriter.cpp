@@ -73,6 +73,16 @@ std::map<QString, QString> getFormatRanges(Headers type, QString subtype)
                          { TITLE_RANGE, ISB_TIME_REPORT_RANGE_TITLE },
                          { INFO_RANGE, ISB_TIME_REPORT_RANGE_INFO }
                      };
+    case Headers::TITAN:
+        return subtype == SIMPLE_REPORT
+                   ? std::map<QString, QString>{ { TITLE_RANGE,
+                                                   STANDARD_RANGE_TITLE },
+                                                 { INFO_RANGE,
+                                                   STANDARD_RANGE_TITLE } }
+                   : std::map<QString, QString>{
+                         { TITLE_RANGE, ISB_TIME_REPORT_RANGE_TITLE },
+                         { INFO_RANGE, ISB_TIME_REPORT_RANGE_INFO }
+                     };
     default:
         return {};
     }
@@ -80,7 +90,7 @@ std::map<QString, QString> getFormatRanges(Headers type, QString subtype)
 
 QString createReportInfo(QString beginDate, QString endDate)
 {
-    return QString("Report created from period on %1 to %2").arg(beginDate,endDate);
+    return QObject::tr("Report created from period on %1 to %2").arg(beginDate,endDate);
 }
 
 QString createFileName()
@@ -102,6 +112,19 @@ QString createPath(const QString& reportId)
     return path;
 }
 
+Headers getHeadersType(QString id)
+{
+    std::map<QString, Headers> headersType{
+        { device_id::COMMUTATION_STATION, Headers::STANDARD },
+        { device_id::LOUDSPEAKER, Headers::STANDARD },
+        { device_id::SNMP, Headers::STANDARD },
+        { device_groups::TITAN, Headers::TITAN },
+        { device_groups::ISB, Headers::ISB }
+    };
+
+    return headersType[id];
+}
+
 QStringList getHeaders(Headers type, QString subtype)
 {
     static const auto headers = std::map<
@@ -112,6 +135,11 @@ QStringList getHeaders(Headers type, QString subtype)
               { "Наименование", "Состояние", "Время перехода в состояние" } },
             { TIME_REPORT,
               { "Наименование", "Состояние", "Общее время в состоянии" } } } },
+        { Headers::TITAN,
+          { { SIMPLE_REPORT,
+              { "Наименование", "Состояние", "Время перехода в состояние" } },
+            { TIME_REPORT,
+              { "Наименование", "Состояние", "Кол-во переходов", "Общее время в состоянии" } } } },
 
         { Headers::ISB,
           { { SIMPLE_REPORT,
@@ -138,7 +166,7 @@ std::shared_ptr<QXlsx::Document> createDocument(const std::shared_ptr<Report>& r
 
     auto document = std::make_shared<QXlsx::Document>();
     auto headersType
-        = report->id() == ISB ? Headers::ISB : Headers::STANDARD;
+        = getHeadersType(report->id());
     auto headers = getHeaders(headersType, report->subtype());
     auto formatRanges = getFormatRanges(headersType, report->subtype());
     auto reportInfo = createReportInfo(report->beginDate(), report->endDate());
@@ -200,7 +228,13 @@ void ReportWriter::writeReportToFile()
 
     auto path = createPath(m_report->id());
     auto fileName = createFileName();
-    document->saveAs(path + fileName);
+    m_reportPath = path + fileName;
+    document->saveAs(m_reportPath);
+}
+
+QString ReportWriter::createdReportPath()
+{
+    return m_reportPath;
 }
 
 } // namespace mantis

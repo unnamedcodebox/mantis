@@ -4,8 +4,6 @@
 #include "../core/TitanParser.h"
 #include "../core/IsbParser.h"
 
-#include "../core/TimeReport.h"
-
 #include <QDebug>
 
 #include <gtest/gtest.h>

@@ -27,9 +27,14 @@ class ReportManager: public QObject
 {
     Q_OBJECT
 public:
-    ReportManager(std::shared_ptr<Database> database);
+    ReportManager(boost::property_tree::ptree config);
 
 public slots:
+
+    /**
+     * Start Report Manager
+     */
+    void start();
 
     /**
      * Create report based on report info: id, title, group etc
@@ -38,8 +43,10 @@ public slots:
 
 signals:
     void reportCreated(QString message);
+    void sendReportPath(QString path);
 
 private:
+    boost::property_tree::ptree m_config;
     std::shared_ptr<Database> m_database;
     std::unique_ptr<Query> m_query;
     std::unique_ptr<Parser> m_parser;

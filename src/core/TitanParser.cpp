@@ -11,10 +11,28 @@
 #include "SplitDatabaseMessage.h"
 
 #include <QDateTime>
+#include <QObject>
 #include <QRegExp>
 
 namespace mantis
 {
+
+namespace  {
+
+QString getState(int stateCode)
+{
+    std::map<int, QString> states = { { 0, QObject::tr("OK") },
+                                      { 1, QObject::tr("Emergency cooling") },
+                                      { 2, QObject::tr("Emergency heat") },
+                                      { 3, QObject::tr("Overhead") },
+                                      { 4, QObject::tr("Emergency pneumatic") },
+                                      { 5, QObject::tr("Emergency network") } };
+
+    auto stateExists = states.find(stateCode);
+    return stateExists != states.end() ? states.at(stateCode) : QObject::tr("OK");
+}
+
+} // anonymous
 
 namespace {
 
@@ -31,21 +49,31 @@ auto parseDate(
 }
 } // anonymous
 
-TitanParser::TitanParser(std::map<int, QString> states):
-    m_states(std::move(states))
-{
-
-}
-
 ReportTable TitanParser::parseTable(Table &table)
 {
     auto reportTable = ReportTable{};
 
-    for(const auto& row : table)
+    auto counter = 1;
+    auto currentState = QString();
+    for(auto& row : table)
     {
         auto parts = splitDatabaseMessage(row.at("msg"));
         auto data = parseMessage(parts);
-        reportTable.push_back({data.at("name"), data.at("state"), data.at("time")});
+        if(counter == 1)
+        {
+            reportTable.push_back(
+                { data.at("name"), data.at("state"), data.at("time") });
+            currentState = data.at("state");
+        }
+        else {
+            if(!(data.at("state") == currentState))
+            {
+                reportTable.push_back(
+                    { data.at("name"), data.at("state"), data.at("time") });
+                currentState = data.at("state");
+            }
+        }
+        ++counter;
     }
 
     return reportTable;
@@ -53,16 +81,12 @@ ReportTable TitanParser::parseTable(Table &table)
 
 std::map<QString, QString> TitanParser::parseMessage(std::vector<QString> &message)
 {
-    auto state = QString();
-    message[10] = message[10].replace(QString("0 CODE ( РПДУ Титан, № 1 - "), QString());
+    message[10] = message[10].replace(QObject::tr("0 CODE ( RPDU, № 1 - "), QString());
     message[10] = message[10].replace(QString(" ) "), QString(""));
 
-    auto stateExists = m_states.find(message[10].toInt());
-    state = stateExists != m_states.end() ? m_states.at(message[10].toInt()) : QString("Исправно");
-
+    auto state = getState(message[10].toInt());
     auto time = parseDate(message[2], INPUT_DATE_FORMAT, OUTPUT_DATE_FORMAT);
-
-    auto data = std::map<QString, QString>{{"name" , "CДВ РПДУ Титан-М"}, {"state" , state}, {"time", time}};
+    auto data = std::map<QString, QString>{{"name" , QObject::tr("RPDU")}, {"state" , state}, {"time", time}};
 
     return data;
 }

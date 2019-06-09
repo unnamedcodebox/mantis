@@ -17,8 +17,7 @@
 namespace mantis
 {
 /**
- * @brief The OrdinaryParser class using for parsing "ordinary" device groups:
- * Commutation Station, SNMP, Loudspeaker
+ * @brief The OrdinaryParser class using for parsing for Ordinary device group
  */
 class OrdinaryParser: public Parser
 {

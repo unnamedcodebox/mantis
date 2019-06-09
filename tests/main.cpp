@@ -11,6 +11,11 @@
 int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
+    const auto CORE_TR_PATH = "../src/core/core_ru.qm";
+    QTranslator coreTranslator;
+    coreTranslator.load(CORE_TR_PATH);
+    app.installTranslator(&coreTranslator);
+
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

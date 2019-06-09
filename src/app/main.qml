@@ -10,7 +10,7 @@ Window {
     height: 700
     minimumWidth: 700
     minimumHeight: 500
-    title: qsTr("ИСП - формирование справок")
+    title: qsTr("IaRS - Report creation")
 
     Loader {
         id: reportSwitcher
@@ -19,7 +19,7 @@ Window {
         function loadSwitcher(){reportSwitcher.source = "qrc:/ReportType.qml"}
     }
     Connections {
-        target: watcher
+        target: uiController
         onReportSwitched: {
             reportSwitcher.source = "qrc:/Report.qml"
         }

@@ -75,6 +75,8 @@ void OrdinaryReport::createTimeReportTable(ReportTable& table)
         device.replace(QString(","), "");
     }
 
+    auto timeStateTable = TimeStateTable{};
+
     auto timeReport = ReportTable{};
     if (!table.empty())
     {
@@ -84,7 +86,7 @@ void OrdinaryReport::createTimeReportTable(ReportTable& table)
             auto previousState = QString{};
             auto previousStateDateTime = QDateTime{};
             auto currentStateDateTime = QDateTime{};
-            auto timeStateTable = TimeStateTable{};
+
             for (const auto& row: table)
             {
                 if (device == row[0])
@@ -124,9 +126,20 @@ void OrdinaryReport::createTimeReportTable(ReportTable& table)
                 }
             }
         }
-    }
 
-    m_reportTable = std::move(timeReport);
+        auto resultTable = ReportTable{};
+        for (auto device: timeStateTable)
+        {
+            for (auto& state: device.second)
+            {
+                resultTable.push_back(
+                    { device.first,
+                      state.first,
+                      secondsToTime(state.second.at("delta")) });
+            }
+        }
+        m_reportTable = std::move(resultTable);
+    }
 }
 
 } // namespace mantis
