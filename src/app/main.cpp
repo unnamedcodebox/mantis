@@ -1,4 +1,4 @@
-#include "../config/ConfigReader.h"
+#include "../core/ConfigReader.h"
 
 #include "../core/Database.h"
 #include "../core/OrdinaryParser.h"
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 
     QQmlApplicationEngine engine;
 
-    auto components = readReportsConfiguration("device_list.json");
+    auto components = config::readReportsConfiguration("device_list.json");
     auto databaseConfig = config::fromFile("config.json");
 
     QThread* thread = new QThread();

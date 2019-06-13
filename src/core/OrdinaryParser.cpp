@@ -18,6 +18,11 @@ namespace mantis
 
 namespace {
 
+const auto NAME = "name";
+const auto STATE = "state";
+const auto MSG = "msg";
+const auto TIME = "time";
+
 const auto INPUT_DATE_FORMAT = QString{"ddd MMM dd hh:mm:ss yyyy"};
 const auto OUTPUT_DATE_FORMAT = QString{"dd-MM-yyyy hh:mm:ss"};
 
@@ -34,38 +39,35 @@ auto parseDate(
 ReportTable OrdinaryParser::parseTable(Table& table)
 {
     auto reportTable = ReportTable{};
-    auto deviceStates = std::map<QString, QString>();
+    auto deviceStates = std::map<QString, QString>{};
     for (auto& row: table)
     {
-        auto parts = splitDatabaseMessage(row.at("msg"));
+        auto parts = splitDatabaseMessage(row.at(MSG));
         auto data = parseMessage(parts);
 
-        if (deviceStates.find(data.at("name")) != deviceStates.end())
+        if (deviceStates.find(data.at(NAME)) != deviceStates.end())
         {
-            if (deviceStates.at(data.at("name")) != data.at("state"))
+            if (deviceStates.at(data.at(NAME)) != data.at(STATE))
             {
                 reportTable.push_back(
-                    { data.at("name"), data.at("state"), data.at("time") });
-                deviceStates[data.at("name")] = data.at("state");
+                    { data.at(NAME), data.at(STATE), data.at(TIME) });
+                deviceStates[data.at(NAME)] = data.at(STATE);
             }
         }
         else
         {
 
             reportTable.push_back(
-                { data.at("name"), data.at("state"), data.at("time") });
-            deviceStates[data.at("name")] = data.at("state");
+                { data.at(NAME), data.at(STATE), data.at(TIME) });
+            deviceStates[data.at(NAME)] = data.at(STATE);
         }
     }
-
     return reportTable;
 }
 
 std::map<QString, QString>
 OrdinaryParser::parseMessage(std::vector<QString>& message)
 {
-    qDebug() << message;
-
     message[9] = message[9].replace(QObject::tr("State update:"), "");
     message[9] = message[9].replace(QString("("), "");
     message[9] = message[9].replace(QString(")"), "");
@@ -76,9 +78,9 @@ OrdinaryParser::parseMessage(std::vector<QString>& message)
 
     auto time = parseDate(message[2], INPUT_DATE_FORMAT, OUTPUT_DATE_FORMAT);
 
-    auto data = std::map<QString, QString>{ { "name", message[9].trimmed() },
-                                            { "state", message[10].trimmed() },
-                                          { "time", time }};
+    auto data = std::map<QString, QString>{ { NAME, message[9].trimmed() },
+                                            { STATE, message[10].trimmed() },
+                                          { TIME, time }};
     return data;
 }
 

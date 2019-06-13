@@ -39,7 +39,7 @@ Rectangle {
                 property int indexed: 0
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.maximumWidth: parent
+                Layout.maximumWidth: parent.width
                 Layout.margins: 10
                 clip: true
 

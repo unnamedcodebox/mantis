@@ -33,7 +33,7 @@ public:
     explicit Database(boost::property_tree::ptree config);
 
     /**
-     * Init database connection
+     * Init database method
      */
     void init();
 
@@ -52,5 +52,4 @@ private:
     QSqlDatabase m_database;
     bool m_opened = false;
 };
-
 } // namespace mantis

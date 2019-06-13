@@ -61,8 +61,10 @@ std::map<QString, QString> getFormatRanges(Headers type, QString subtype)
     switch (type)
     {
     case Headers::STANDARD:
-        return { { TITLE_RANGE, STANDARD_RANGE_TITLE },
-                 { INFO_RANGE, STANDARD_RANGE_INFO } };
+        return subtype == SIMPLE_REPORT ? std::map<QString, QString>{ { TITLE_RANGE, STANDARD_RANGE_TITLE },
+                 { INFO_RANGE, STANDARD_RANGE_INFO } } :
+        std::map<QString, QString>{{ TITLE_RANGE, ISB_TIME_REPORT_RANGE_TITLE },
+        { INFO_RANGE, ISB_TIME_REPORT_RANGE_INFO }};
     case Headers::ISB:
         return subtype == SIMPLE_REPORT
                    ? std::map<QString, QString>{ { TITLE_RANGE,
@@ -98,10 +100,10 @@ QString createFileName()
     return QDateTime::currentDateTime().toString("MM_dd_yyyy_hh_mm") + ".xlsx";
 }
 
-QString createPath(const QString& reportId)
+QString createPath(const QString& reportId, const QString& reportSubtype)
 {
-    auto path = QString{ "/home/%1/Documents/Reports/%2/" }.arg(
-        QString::fromStdString(std::string(getenv("USER"))), reportId);
+    auto path = QString{ "/home/%1/Documents/Reports/%2/%3/" }.arg(
+        QString::fromStdString(std::string(getenv("USER"))), reportId, reportSubtype);
 
     QDir dir(path);
     if (!dir.exists())
@@ -134,7 +136,7 @@ QStringList getHeaders(Headers type, QString subtype)
           { { SIMPLE_REPORT,
               { "Наименование", "Состояние", "Время перехода в состояние" } },
             { TIME_REPORT,
-              { "Наименование", "Состояние", "Общее время в состоянии" } } } },
+              { "Наименование", "Состояние", "Количество","Общее время в состоянии" } } } },
         { Headers::TITAN,
           { { SIMPLE_REPORT,
               { "Наименование", "Состояние", "Время перехода в состояние" } },
@@ -226,7 +228,7 @@ void ReportWriter::writeReportToFile()
     auto document = createDocument(m_report);
     writeReportTableToDocument(document, m_report);
 
-    auto path = createPath(m_report->id());
+    auto path = createPath(m_report->id(), m_report->subtype());
     auto fileName = createFileName();
     m_reportPath = path + fileName;
     document->saveAs(m_reportPath);

@@ -13,6 +13,24 @@
 namespace mantis
 {
 
+namespace
+{
+
+const auto SECONDS = "delta";
+const auto STATE_COUNTER = "stateCounter";
+
+QStringList prepareDeviceList(QStringList& deviceList)
+{
+    for (auto& device: deviceList)
+    {
+        device.replace(QString(","), "");
+    }
+
+    return deviceList;
+}
+
+} // anonymous
+
 using namespace report_properties;
 
 OrdinaryReport::OrdinaryReport(
@@ -27,7 +45,7 @@ OrdinaryReport::OrdinaryReport(
     , m_subtype(std::move(subtype))
     , m_beginDate(std::move(beginDate))
     , m_endDate(std::move(endDate))
-    , m_deviceList(std::move(deviceList))
+    , m_deviceList(prepareDeviceList(deviceList))
 {
 }
 
@@ -70,14 +88,8 @@ void OrdinaryReport::createTimeReportTable(ReportTable& table)
 {
     using namespace date_format;
 
-    for (auto& device: m_deviceList)
-    {
-        device.replace(QString(","), "");
-    }
-
     auto timeStateTable = TimeStateTable{};
 
-    auto timeReport = ReportTable{};
     if (!table.empty())
     {
         for (auto& device: m_deviceList)
@@ -94,33 +106,22 @@ void OrdinaryReport::createTimeReportTable(ReportTable& table)
                     if (timeStateTable.find(device) == timeStateTable.end())
                     {
                         currentState = row[1];
-                        currentStateDateTime
-                            = QDateTime::fromString(row[2], OUTPUT_DATE_FORMAT);
-                        timeStateTable[device][currentState]["delta"] = 0;
-                        timeStateTable[device][currentState]["stateCounter"]
-                            = 1;
+                        currentStateDateTime = QDateTime::fromString(row[2], OUTPUT_DATE_FORMAT);
+                        timeStateTable[device][currentState][SECONDS] = 0;
+                        timeStateTable[device][currentState][STATE_COUNTER] = 1;
                     }
                     else
                     {
                         previousState = currentState;
                         currentState = row[1];
-
                         previousStateDateTime = currentStateDateTime;
-                        currentStateDateTime
-                            = QDateTime::fromString(row[2], OUTPUT_DATE_FORMAT);
+                        currentStateDateTime = QDateTime::fromString(row[2], OUTPUT_DATE_FORMAT);
+                        auto seconds = previousStateDateTime.secsTo(currentStateDateTime);
 
-                        auto delta_h = previousStateDateTime.secsTo(
-                            currentStateDateTime);
-                        auto stateTime = secondsToTime(delta_h);
-                        timeReport.push_back(
-                            { device, previousState, stateTime });
-                        timeStateTable[device][previousState]["delta"]
-                            += delta_h;
+                        timeStateTable[device][previousState][SECONDS] += seconds;
                         if (currentState != previousState)
                         {
-                            timeStateTable[device][previousState]
-                                          ["stateCounter"]
-                                += 1;
+                            timeStateTable[device][previousState][STATE_COUNTER] += 1;
                         }
                     }
                 }
@@ -128,17 +129,18 @@ void OrdinaryReport::createTimeReportTable(ReportTable& table)
         }
 
         auto resultTable = ReportTable{};
-        for (auto device: timeStateTable)
+        for (auto device : timeStateTable)
         {
-            for (auto& state: device.second)
+            for (auto& state : device.second)
             {
                 resultTable.push_back(
                     { device.first,
                       state.first,
-                      secondsToTime(state.second.at("delta")) });
+                      QString::number(state.second.at(STATE_COUNTER)),
+                      secondsToTime(state.second.at(SECONDS)) });
             }
         }
-        m_reportTable = std::move(resultTable);
+        m_reportTable = resultTable;
     }
 }
 

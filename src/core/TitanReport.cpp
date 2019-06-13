@@ -67,7 +67,6 @@ void TitanReport::createTimeReportTable(ReportTable& table)
 {
     using namespace date_format;
 
-
     auto currentState = QString{};
     auto previousState = QString{};
     auto previousStateDateTime = QDateTime{};
@@ -95,8 +94,6 @@ void TitanReport::createTimeReportTable(ReportTable& table)
                 = QDateTime::fromString(row[2], OUTPUT_DATE_FORMAT);
 
             auto delta_h = previousStateDateTime.secsTo(currentStateDateTime);
-            auto stateTime = secondsToTime(delta_h);
-            dateTimeReport.push_back({ previousState, stateTime });
             stateTimeTotalCountTable[previousState]["delta"] += delta_h;
             if (currentState != previousState)
             {
@@ -106,27 +103,15 @@ void TitanReport::createTimeReportTable(ReportTable& table)
     }
 
     auto resultStateTime = ReportTable{};
-    auto titleCounter = 0;
     for (auto& state: stateTimeTotalCountTable)
     {
         auto time = secondsToTime(state.second.at("delta"));
-        if (!titleCounter)
-        {
+
             resultStateTime.push_back(
                 { table[0][0],
                   state.first,
                   QString::number(state.second.at("stateCounter")),
                   time });
-        }
-        else
-        {
-            resultStateTime.push_back(
-                { table[0][0],
-                  state.first,
-                  QString::number(state.second.at("stateCounter")),
-                  time });
-        }
-        ++titleCounter;
     }
     m_reportTable = resultStateTime;
 }

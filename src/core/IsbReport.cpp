@@ -71,7 +71,6 @@ void IsbReport::createTimeReportTable(ReportTable& table)
     auto previousState = QString{};
     auto previousStateDateTime = QDateTime{};
     auto currentStateDateTime = QDateTime{};
-    auto dateTimeReport = ReportTable{};
     auto stateTimeTotalCountTable = TimeStateTable{};
     auto deviceArray = std::set<std::vector<QString>>{};
 
@@ -118,10 +117,7 @@ void IsbReport::createTimeReportTable(ReportTable& table)
 
                     auto delta_h
                         = previousStateDateTime.secsTo(currentStateDateTime);
-                    auto stateTime = secondsToTime(delta_h);
 
-                    dateTimeReport.push_back(
-                        { deviceLongName, previousState, stateTime });
                     stateTimeTotalCountTable[deviceLongName][previousState]
                                             ["delta"]
                         += delta_h;
@@ -137,7 +133,6 @@ void IsbReport::createTimeReportTable(ReportTable& table)
     }
 
     auto tempArr = ReportTable{};
-    auto previousDeviceKey = QString{};
     for (auto& deviceKey: stateTimeTotalCountTable)
     {
         for (auto& stateKey: deviceKey.second)
@@ -145,21 +140,13 @@ void IsbReport::createTimeReportTable(ReportTable& table)
             auto time = secondsToTime(stateKey.second.at("delta"));
             auto stateCounter
                 = QString::number(stateKey.second.at("stateCounter"));
-            if (previousDeviceKey != deviceKey.first)
-            {
+
                 tempArr.push_back(
                     { deviceKey.first, stateKey.first, stateCounter, time });
-            }
-            else
-            {
-                tempArr.push_back(
-                    { deviceKey.first, stateKey.first, stateCounter, time });
-            }
-            previousDeviceKey = deviceKey.first;
         }
     }
 
-    m_reportTable = std::move(tempArr);
+    m_reportTable = tempArr;
 }
 
 } // namespace mantis

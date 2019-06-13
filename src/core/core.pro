@@ -21,7 +21,8 @@ HEADERS += \
     TitanReport.h \
     IsbReport.h \
     Properties.h \
-    ReportWriter.h
+    ReportWriter.h \
+    ConfigReader.h
 
 SOURCES += \
     Database.cpp \
@@ -39,7 +40,8 @@ SOURCES += \
     TitanReport.cpp \
     IsbReport.cpp \
     Properties.cpp \
-    ReportWriter.cpp
+    ReportWriter.cpp \
+    ConfigReader.cpp
 
 LIBS += -lboost_filesystem -lboost_system
 

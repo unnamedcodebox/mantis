@@ -1,5 +1,5 @@
 /** @file
- * @brief     Config Reader declaration
+ * @brief     Config Reader functions declaration
  *
  * @ingroup   MANTIS
  *
@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <QString>
-#include <QStringList>
 #include <QVariantList>
 
 #include <boost/property_tree/ptree.hpp>
@@ -26,12 +24,11 @@ namespace config
  */
 boost::property_tree::ptree fromFile(const std::string& fileName);
 
-} // config
-
-QStringList readDeviceListFromFile(const std::string& fileName, const std::string& reportName);
-
-std::vector<std::map<QString, QString>> readTestTableFromFile(const std::string& fileName);
-
+/**
+ * Read components configuration from file
+ */
 QVariantList readReportsConfiguration(const std::string& fileName);
+
+} // config
 
 } // mantis

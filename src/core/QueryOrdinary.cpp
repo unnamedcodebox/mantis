@@ -14,18 +14,17 @@ namespace mantis
 {
 
 QueryOrdinary::QueryOrdinary(
-    AppName appName, QStringList deviceList, QString beginDate, QString endDate):
-    m_appName(std::move(appName)),
-    m_deviceList(std::move(deviceList)),
-    m_beginDate(std::move(beginDate)),
-    m_endDate(std::move(endDate))
+    AppName appName, QStringList deviceList, QString beginDate, QString endDate)
+    : m_appName(std::move(appName))
+    , m_deviceList(std::move(deviceList))
+    , m_beginDate(std::move(beginDate))
+    , m_endDate(std::move(endDate))
 {
     init();
 }
 
 void QueryOrdinary::init()
 {
-//    TODO: devices empty checking
     auto devices = m_deviceList.join("|");
     auto parts = QStringList{};
     parts.push_back(

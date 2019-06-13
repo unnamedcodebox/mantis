@@ -8,6 +8,8 @@
 
 #include "Database.h"
 
+#include "Properties.h"
+
 #include <QDebug>
 #include <QtSql/QSql>
 #include <QStringList>
@@ -16,14 +18,7 @@
 namespace mantis
 {
 
-const auto DRIVER = "driver";
-const auto HOST_ADDRESS = "hostaddr";
-const auto DB_NAME = "dbname";
-const auto USERNAME = "username";
-const auto PASSWORD = "password";
-
-const auto TIME_REPORTED = "timeReported";
-const auto MESSAGE = "msg";
+using namespace database_properties;
 
 void Database::init()
 {
@@ -63,8 +58,6 @@ Table Database::sendQuery(const QString& queryString, bool selectTimeReported)
         auto table = Table{};
         auto query = QSqlQuery{};
         query.exec(queryString);
-        qDebug() << queryString;
-        //m_database.close();
 
         while (query.next())
         {
@@ -76,8 +69,6 @@ Table Database::sendQuery(const QString& queryString, bool selectTimeReported)
             part[MESSAGE] = query.value(MESSAGE).toString();
             table.push_back(part);
         }
-        qDebug() << "this is table" << table;
-
         return table;
     }
     return {};
