@@ -4,9 +4,9 @@ TARGET = mantis
 QT += quick core sql
 CONFIG += c++14
 
-DEPENDPATH += ../config ../core
-INCLUDEPATH += ../config ../core
-LIBS += -L../core/ -lcore -lboost_filesystem -lboost_system -L../config/ -lconfig
+DEPENDPATH += ../core
+INCLUDEPATH += ../core
+LIBS += -L../core/ -lcore -lboost_filesystem -lboost_system
 
 SOURCES += \
         main.cpp \

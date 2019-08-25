@@ -1,21 +1,21 @@
-#include "../config/ConfigReader.h"
+////#include "../config/ConfigReader.h"
 
-#include <QDebug>
+//#include <QDebug>
 
-#include <QtXlsx>
+//#include <QtXlsx>
 
-#include <string>
-#include <stdlib.h>
+//#include <string>
+//#include <stdlib.h>
 
-#include <gtest/gtest.h>
+//#include <gtest/gtest.h>
 
-TEST(readDeviceListFromConfigFile, Positive)
-{
+//TEST(readDeviceListFromConfigFile, Positive)
+//{
 
 
-}
+//}
 
-TEST(readReportsConfiguration, Positive)
-{
-    auto configuration = mantis::readReportsConfiguration("device_list.json");
-}
+//TEST(readReportsConfiguration, Positive)
+//{
+//    auto configuration = mantis::readReportsConfiguration("device_list.json");
+//}

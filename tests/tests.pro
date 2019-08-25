@@ -4,9 +4,7 @@ QT += sql xlsx core
 
 DEPENDPATH += . ../src/core ../src/config
 INCLUDEPATH += ../src/core ../src/config
-LIBS += -L../src/core/ -lcore -lgtest -L../src/config/ -lconfig
-
-
+LIBS += -L../src/core/ -lcore -lgtest
 
 SOURCES += \
     main.cpp \
