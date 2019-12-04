@@ -7,7 +7,7 @@
  */
 
 #include "QueryOrdinary.h"
-
+#include <QDebug>
 #include <QObject>
 
 namespace mantis
@@ -38,6 +38,8 @@ void QueryOrdinary::init()
     parts.push_back("ORDER BY \"timeReported\";");
 
     m_query = parts.join(" ");
+
+    qDebug() << m_query;
 }
 
 QString QueryOrdinary::get()

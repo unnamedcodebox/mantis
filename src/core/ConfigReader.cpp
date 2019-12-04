@@ -27,6 +27,8 @@ const auto ORDINARY = "ordinary";
 const auto TITLE = "title";
 const auto DEVICE_LIST = "device_list";
 
+const auto PARSER_CONFIG = "parserConfig";
+
 } // anonymous
 
 boost::property_tree::ptree fromFile(const std::string& fileName)
@@ -54,6 +56,9 @@ QVariantList readReportsConfiguration(const std::string& fileName)
         auto deviceList = QStringList{};
         boost::optional<boost::property_tree::ptree&> listExists
             = deviceNode.second.get_child_optional(DEVICE_LIST);
+
+        auto parserConfig = deviceNode.second.get_optional<std::string>(PARSER_CONFIG);
+
         if (group == ORDINARY)
         {
             for (const auto& it : *listExists)
@@ -64,7 +69,8 @@ QVariantList readReportsConfiguration(const std::string& fileName)
             components.push_back(QVariantMap{ { ID, id },
                                               { GROUP, group },
                                               { TITLE, title },
-                                              { DEVICE_LIST, deviceList } });
+                                              { DEVICE_LIST, deviceList }
+                                 });
         }
         else
         {

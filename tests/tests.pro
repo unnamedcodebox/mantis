@@ -13,10 +13,14 @@ SOURCES += \
     ConfigFromFileTests.cpp \
     TimeReportTests.cpp \
     QueryTests.cpp \
-    ReportWriterTests.cpp
+    ReportWriterTests.cpp \
+    OrdinaryParserTests.cpp
 
 copydata.commands = $(COPY_DIR) $$PWD/config.json $$PWD/device_list.json $$PWD/isbTests.json $$OUT_PWD
 first.depends = $(first) copydata
 export(first.depends)
 export(copydata.commands)
 QMAKE_EXTRA_TARGETS += first copydata
+
+HEADERS += \
+    OrdinaryParserTests.h

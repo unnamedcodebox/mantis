@@ -139,7 +139,9 @@ void ReportManager::createReport(QVariantMap reportInfo)
     m_report = createReportFactoryMethod(reportInfo);
 
     auto table = m_database->sendQuery(m_query->get());
+    qDebug() << table;
     auto reportTable = m_parser->parseTable(table);
+    qDebug() << reportTable;
     m_report->setReportTable(reportTable);
 
     if (m_report->subtype() == report_subtypes::TIME_REPORT)

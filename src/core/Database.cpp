@@ -58,6 +58,7 @@ Table Database::sendQuery(const QString& queryString, bool selectTimeReported)
         auto table = Table{};
         auto query = QSqlQuery{};
         query.exec(queryString);
+        qDebug() << "Query size is: " << query.size();
 
         while (query.next())
         {

@@ -12,6 +12,9 @@
 #include <QDateTime>
 #include <QObject>
 #include <QDebug>
+#include <iostream>
+#include <regex>
+#include <iomanip>
 
 namespace mantis
 {
@@ -42,8 +45,10 @@ ReportTable OrdinaryParser::parseTable(Table& table)
     auto deviceStates = std::map<QString, QString>{};
     for (auto& row: table)
     {
-        auto parts = splitDatabaseMessage(row.at(MSG));
-        auto data = parseMessage(parts);
+        //auto parts = splitDatabaseMessage(row.at(MSG));
+        //auto data = parseMessage(parts);
+
+        auto data = parseMessage(row.at(MSG));
 
         if (deviceStates.find(data.at(NAME)) != deviceStates.end())
         {
@@ -83,5 +88,51 @@ OrdinaryParser::parseMessage(std::vector<QString>& message)
                                           { TIME, time }};
     return data;
 }
+
+std::map<QString, QString>
+OrdinaryParser::parseMessage(const QString& message)
+{
+    //auto regExp = "Обновление состояния:\\((.*\\,\\s)\\) = 0 CODE \\(\\s([^0-9])\\s\\)";
+    auto regExp = "Обновление состояния:\\((.*)\\, \\) = 0 CODE \\( (.*) \\)";
+
+    auto deviceMatched = "1";
+    auto stateMatcher = "2";
+
+    auto parseToInt = [](const QString& matchedGroup)
+    {
+        return matchedGroup.toInt();
+    };
+
+    auto deviceMatch = parseToInt(deviceMatched);
+    auto stateMatch = parseToInt(stateMatcher);
+
+    std::smatch match;
+    auto messageStd = message.toStdString();
+    auto found = std::regex_search(messageStd, match, std::regex(regExp));
+
+    auto name = std::string();
+    auto state = std::string();
+
+    if(found)
+    {
+        name = match[static_cast<size_t>(deviceMatch)].str();
+        state = match[static_cast<size_t>(stateMatch)].str();
+    }
+
+    auto dateRegExp = "\\[c\\] \\'(.*\)\' \\'";
+
+    std::smatch dateMatch;
+
+    auto foundDate = std::regex_search(messageStd, dateMatch, std::regex(dateRegExp));
+
+    auto time = parseDate(QString::fromStdString(dateMatch[1].str()), INPUT_DATE_FORMAT, OUTPUT_DATE_FORMAT);
+
+    auto data = std::map<QString, QString>{ { NAME, QString::fromStdString(name) },
+                                            { STATE, QString::fromStdString(state) },
+                                          { TIME, time }};
+    std::cout << "DATE MATCH" << dateMatch[1].str() << "///";
+    return data;
+}
+
 
 } // namespace mantis

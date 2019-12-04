@@ -1,0 +1,5 @@
+{
+    "regExp": "Обновление состояния:\(.*, \) = 0 CODE \( [^...] \)",
+    "deviceNameMatched" : "1",
+    "stateMatched": "2"
+}

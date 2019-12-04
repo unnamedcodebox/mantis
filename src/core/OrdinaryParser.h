@@ -33,6 +33,7 @@ public:
      */
     virtual std::map<QString,QString> parseMessage(std::vector<QString>& message) override;
 
+    std::map<QString, QString> parseMessage(const QString &message);
 };
 
 } // namespace mantis
