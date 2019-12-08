@@ -1,4 +1,4 @@
-#include "../core/OrdinaryParserNew.h"
+#include "../core/OrdinaryParser.h"
 
 #include "ConfigReader.h"
 

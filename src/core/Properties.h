@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "AppName.h"
-
 #include <QString>
 #include <QVariantMap>
 
@@ -34,8 +32,8 @@ namespace device_groups
 {
 
 const auto ORDINARY = "ordinary";
-const auto TITAN = "titan";
-const auto ISB = "isb";
+const auto WITH_TIMESTAMP = "timestamp";
+const auto SEPARATED = "separated";
 
 } // namespace device_groups
 

@@ -11,17 +11,10 @@
 #include "Properties.h"
 
 #include "ConfigReader.h"
-#include "OrdinaryParserNew.h"
+#include "OrdinaryParser.h"
 #include "OrdinaryQuery.h"
 #include "OrdinaryParser.h"
-#include "QueryOrdinary.h"
 #include "OrdinaryReport.h"
-#include "TitanParser.h"
-#include "TitanQuery.h"
-#include "TitanReport.h"
-#include "IsbParser.h"
-#include "IsbQuery.h"
-#include "IsbReport.h"
 
 #include <QDebug>
 
@@ -98,14 +91,7 @@ std::unique_ptr<Query> createQuery(
         query.reset(
             new OrdinaryQuery(deviceList, beginDate, endDate, config));
     }
-    else if (group == TITAN)
-    {
-        query.reset(new TitanQuery(AppName::ICS, beginDate, endDate));
-    }
-    else if (group == ISB)
-    {
-        query.reset(new IsbQuery(AppName::PCS, beginDate, endDate));
-    }
+
     return query;
 }
 
@@ -124,14 +110,7 @@ std::shared_ptr<Report> createReportFactoryMethod(
         auto deviceList = getDeviceList(reportInfo);
         return std::make_shared<OrdinaryReport>(id, title, subtype, beginDate, endDate, deviceList);
     }
-    else if (group == TITAN)
-    {
-        return std::make_shared<TitanReport>(id, title, subtype, beginDate, endDate);
-    }
-    else if (group == ISB)
-    {
-        return std::make_shared<IsbReport>(id, title, subtype, beginDate, endDate);
-    }
+
     return {};
 }
 

@@ -2,8 +2,6 @@
 
 #include "../core/Database.h"
 #include "../core/OrdinaryParser.h"
-#include "../core/TitanParser.h"
-#include "../core/IsbParser.h"
 #include "../core/ReportManager.h"
 #include "../core/UiController.h"
 

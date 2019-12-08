@@ -1,5 +1,5 @@
 #include "../core/Database.h"
-#include "../core/IsbQuery.h"
+#include "../core/ConfigReader.h"
 #include <QtXlsx>
 
 #include <QDebug>
@@ -34,5 +34,4 @@ TEST(createDatabaseFromConfig, Positive)
     boost::property_tree::ptree config;
     boost::property_tree::read_json("config.json", config);
     auto database = Database(config);
-    auto query = IsbQuery(AppName::PCS, "01/03/2019", "01/04/2019");
 }

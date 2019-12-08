@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "AppName.h"
-
 #include <QString>
 
 namespace mantis

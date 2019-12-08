@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "AppName.h"
-
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QString>
