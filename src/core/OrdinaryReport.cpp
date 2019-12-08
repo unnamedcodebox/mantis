@@ -19,16 +19,6 @@ namespace
 const auto SECONDS = "delta";
 const auto STATE_COUNTER = "stateCounter";
 
-QStringList prepareDeviceList(QStringList& deviceList)
-{
-    for (auto& device: deviceList)
-    {
-        device.replace(QString(","), "");
-    }
-
-    return deviceList;
-}
-
 } // anonymous
 
 using namespace report_properties;
@@ -45,7 +35,7 @@ OrdinaryReport::OrdinaryReport(
     , m_subtype(std::move(subtype))
     , m_beginDate(std::move(beginDate))
     , m_endDate(std::move(endDate))
-    , m_deviceList(prepareDeviceList(deviceList))
+    , m_deviceList(deviceList)
 {
 }
 

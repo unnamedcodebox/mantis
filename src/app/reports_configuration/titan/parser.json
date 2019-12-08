@@ -1,0 +1,30 @@
+{
+    "stateMessage":
+    {
+        "regExp": "Обновление состояния:\\((.*)\\, \\) = 0 CODE \\( (.*) \\)",
+        "encodeStates": false,
+        "encodeDevice": false,
+        "deviceMatch":1,
+        "stateMatch":2,
+        "states":{
+            "0":"Исправно",
+            "1":"Неисправно",
+            "2": "Не отвечает",
+            "C01234" : "Не отвечает"
+        },
+        "devices":{
+            "C0A2FFDD": "Видеокамера - 1 - 4",
+            "C01234" : "Коммутатор 24"
+        },
+        "defaultDevice":"Устройство по умолчанию (ТЕСТ)",
+        "defaultState": "Состояние по умолчанию (ТЕСТ)"
+    },
+    "timeMessage":
+    {
+        "regExp": "\\[c\\] \\'(.*)\\' \\'",
+        "timeMatch": 1,
+        "input":"ddd MMM dd hh:mm:ss yyyy",
+        "output":"dd-MM-yyyy hh:mm:ss"
+    }
+
+}

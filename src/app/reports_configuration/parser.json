@@ -1,0 +1,21 @@
+{
+    "stateMessage":
+    {
+        "regExp": "Обновление состояния:\\((.*)\\, \\) = 0 CODE \\( (.*) \\)",
+        "deviceMatch":"1",
+        "stateMatch":"2",
+        "states":{
+            "0":"Исправно",
+            "1":"Неисправно",
+            "2": "Не отвечает"
+        }
+    },
+    "timeMessage":
+    {
+        "regExp": "\\[c\\] \\'(.*\)\' \\'",
+        "timeMatch": "1",
+        "input":"ddd MMM dd hh:mm:ss yyyy",
+        "output":"dd-MM-yyyy hh:mm:ss"
+    }
+
+}

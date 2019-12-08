@@ -22,7 +22,12 @@ HEADERS += \
     IsbReport.h \
     Properties.h \
     ReportWriter.h \
-    ConfigReader.h
+    ConfigReader.h \
+    ConfiguredParser.h \
+    Configuration.h \
+    OrdinaryParserNew.h \
+    DocumentProperties.h \
+    OrdinaryQuery.h
 
 SOURCES += \
     Database.cpp \
@@ -41,7 +46,10 @@ SOURCES += \
     IsbReport.cpp \
     Properties.cpp \
     ReportWriter.cpp \
-    ConfigReader.cpp
+    ConfigReader.cpp \
+    ConfiguredParser.cpp \
+    OrdinaryParserNew.cpp \
+    OrdinaryQuery.cpp
 
 LIBS += -lboost_filesystem -lboost_system
 

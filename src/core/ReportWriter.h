@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Report.h"
+#include "Configuration.h"
 
 #include <QString>
 #include <QStringList>
@@ -37,7 +38,7 @@ class ReportWriter
 {
 public:
 
-    explicit ReportWriter(std::shared_ptr<Report> report);
+    ReportWriter(std::shared_ptr<Report> report, const DocumentConfiguration& config);
 
     /**
      * Method using for writing report to file
@@ -54,6 +55,7 @@ private:
     std::shared_ptr<Report> m_report;
     std::shared_ptr<QXlsx::Document> m_document;
     QString m_reportPath;
+    DocumentConfiguration m_conf;
 
 };
 

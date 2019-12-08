@@ -14,6 +14,8 @@
 #include <QObject>
 #include <QRegExp>
 
+#include <regex>
+
 namespace mantis
 {
 
@@ -31,6 +33,14 @@ QString getState(int stateCode)
     auto stateExists = states.find(stateCode);
     return stateExists != states.end() ? states.at(stateCode) : QObject::tr("OK");
 }
+
+auto statesFromConfig
+    = std::map<std::string, std::string>{ { "0", "Исправно" },
+                                          { "1", "Авария - Охлаждение" },
+                                          { "2", "Авария - Перегрев" },
+                                          { "3", "Авария - Перегрузка" },
+                                          { "4", "Авария - Пневматика" },
+                                          { "5", "Авария - Сеть" } };
 
 } // anonymous
 
@@ -87,6 +97,61 @@ std::map<QString, QString> TitanParser::parseMessage(std::vector<QString> &messa
     auto state = getState(message[10].toInt());
     auto time = parseDate(message[2], INPUT_DATE_FORMAT, OUTPUT_DATE_FORMAT);
     auto data = std::map<QString, QString>{{"name" , QObject::tr("RPDU")}, {"state" , state}, {"time", time}};
+
+    return data;
+}
+
+std::map<QString, QString> TitanParser::parseMessage(const QString &message)
+{
+    auto regExp = "CODE \\( ([0-9]) \\)";
+
+    auto messageStd = message.toStdString();
+
+    //auto deviceMatched = "1";
+    auto stateMatcher = "1";
+
+    auto parseToInt = [](const QString& matchedGroup)
+    {
+        return matchedGroup.toInt();
+    };
+
+    //auto deviceMatch = parseToInt(deviceMatched);
+    auto stateMatch = parseToInt(stateMatcher);
+
+    std::smatch match;
+    auto found = std::regex_search(messageStd, match, std::regex(regExp));
+
+    auto name = std::string();
+    auto state = std::string();
+
+    if(found)
+    {
+        //name = match[static_cast<size_t>(deviceMatch)].str();
+        state = match[static_cast<size_t>(stateMatch)].str();
+    }
+
+    auto statesConfig = true;
+    auto defaultState = "Неизвестно";
+
+    if(statesConfig)
+    {
+        auto find = statesFromConfig.find(state);
+        if(find != statesFromConfig.end())
+        {
+            state = find->second;
+        }
+        else {
+            state = defaultState;
+        }
+
+    }
+
+    auto dateRegExp = "\\[c\\] \\'(.*)\' \\'";
+    std::smatch dateMatch;
+    auto foundDate = std::regex_search(messageStd, dateMatch, std::regex(dateRegExp));
+    auto time = parseDate(QString::fromStdString(dateMatch[1].str()), INPUT_DATE_FORMAT, OUTPUT_DATE_FORMAT);
+
+    auto data = std::map<QString, QString>{{"name" , QObject::tr("RPDU")}, {"state" , QString::fromStdString(state)}, {"time", time}};
 
     return data;
 }

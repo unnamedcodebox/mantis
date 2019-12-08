@@ -1,0 +1,12 @@
+{
+    "group":"ordinary",
+    "fields":{
+        "message":"\"msg\"",
+        "timestamp":"\"timeReported\""
+    },
+    "tableName": "\"Event\"",
+    "statement": "\"msg\" LIKE '%Обновление состояния%' AND \"msg\" SIMILAR TO '%(xx_DEVICE_LIST_xx)%' ",
+    "modificatorsInStatement": true,
+    "useRawString": false,
+    "rawString":"empty"
+}

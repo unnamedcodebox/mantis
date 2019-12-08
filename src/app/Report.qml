@@ -191,6 +191,7 @@ Rectangle {
                         "end_date": endDate.text,
                         "group": components[uiController.switchedIndex].group,
                         "title": components[uiController.switchedIndex].title,
+                        "reportConfig": components[uiController.switchedIndex].reportConfig,
                         "id": components[uiController.switchedIndex].id,
                         "sub_type": subtype,
                         "device_list": reportDeviceList

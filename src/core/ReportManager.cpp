@@ -10,6 +10,9 @@
 
 #include "Properties.h"
 
+#include "ConfigReader.h"
+#include "OrdinaryParserNew.h"
+#include "OrdinaryQuery.h"
 #include "OrdinaryParser.h"
 #include "QueryOrdinary.h"
 #include "OrdinaryReport.h"
@@ -46,10 +49,44 @@ QString getStatusMessage(Status status)
     }
 }
 
+std::unique_ptr<Parser> createParser(const QString& group)
+{
+    std::unique_ptr<Parser> parser;
+
+    auto configFile = "reports_configuration/" + group.toStdString() + "/parser.json";
+
+    auto configuration = config::readParserConfiguration(configFile);
+
+    parser.reset(new OrdinaryParserNew(configuration));
+
+
+    return parser;
+}
+
+DocumentConfiguration createDocumentConfiguration(const QString& id, const QString& subtype)
+{
+    auto configFile = "reports_configuration/" + id.toStdString() + "/document.json";
+
+    auto configuration = config::readDocumentConfiguration(configFile, subtype.toStdString());
+
+    return configuration;
+
+}
+
+QueryConfiguration createQueryConfiguration(const QString& id)
+{
+    auto configFile = "reports_configuration/" + id.toStdString() + "/query.json";
+
+    auto configuration = config::readQueryConfiguration(configFile);
+
+    return configuration;
+}
+
 std::unique_ptr<Query> createQuery(
     QVariantMap reportInfo)
 {
     std::unique_ptr<Query> query;
+    auto id = getReportProperty(reportInfo, ID);
     auto group = getReportProperty(reportInfo, GROUP);
     auto beginDate = getReportProperty(reportInfo, BEGIN_DATE);
     auto endDate = getReportProperty(reportInfo, END_DATE);
@@ -57,8 +94,9 @@ std::unique_ptr<Query> createQuery(
     if (group == ORDINARY)
     {
         auto deviceList = getDeviceList(reportInfo);
+        auto config = createQueryConfiguration(id);
         query.reset(
-            new QueryOrdinary(AppName::ICS, deviceList, beginDate, endDate));
+            new OrdinaryQuery(deviceList, beginDate, endDate, config));
     }
     else if (group == TITAN)
     {
@@ -69,25 +107,6 @@ std::unique_ptr<Query> createQuery(
         query.reset(new IsbQuery(AppName::PCS, beginDate, endDate));
     }
     return query;
-}
-
-std::unique_ptr<Parser> createParser(const QString& group)
-{
-    std::unique_ptr<Parser> parser;
-
-    if (group == ORDINARY)
-    {
-        parser.reset(new OrdinaryParser());
-    }
-    else if (group == TITAN)
-    {
-        parser.reset(new TitanParser());
-    }
-    else if (group == ISB)
-    {
-        parser.reset(new IsbParser());
-    }
-    return parser;
 }
 
 std::shared_ptr<Report> createReportFactoryMethod(
@@ -134,8 +153,11 @@ void ReportManager::createReport(QVariantMap reportInfo)
     using namespace report_properties;
 
     auto group = getReportProperty(reportInfo, GROUP);
+    auto id = getReportProperty(reportInfo, ID);
+
     m_query = createQuery(reportInfo);
-    m_parser = createParser(group);
+
+    m_parser = createParser(id);
     m_report = createReportFactoryMethod(reportInfo);
 
     auto table = m_database->sendQuery(m_query->get());
@@ -149,7 +171,8 @@ void ReportManager::createReport(QVariantMap reportInfo)
         m_report->createTimeReportTable(reportTable);
     }
 
-    m_writer = std::make_unique<ReportWriter>(m_report);
+    auto documentConfig = createDocumentConfiguration(id, m_report->subtype());
+    m_writer = std::make_unique<ReportWriter>(m_report, documentConfig);
     m_writer->writeReportToFile();
 
     emit reportCreated(getStatusMessage(Status::SUCCESS));

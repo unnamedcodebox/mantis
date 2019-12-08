@@ -14,9 +14,11 @@ SOURCES += \
     TimeReportTests.cpp \
     QueryTests.cpp \
     ReportWriterTests.cpp \
-    OrdinaryParserTests.cpp
+    OrdinaryParserTests.cpp \
+    TitanParserTests.cpp \
+    ConfiguredParser.cpp
 
-copydata.commands = $(COPY_DIR) $$PWD/config.json $$PWD/device_list.json $$PWD/isbTests.json $$OUT_PWD
+copydata.commands = $(COPY_DIR) $$PWD/config.json $$PWD/device_list.json $$PWD/isbTests.json $$PWD/test_parsers_configuration $$PWD/configuredParser.json $$OUT_PWD
 first.depends = $(first) copydata
 export(first.depends)
 export(copydata.commands)

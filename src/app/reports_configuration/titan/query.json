@@ -1,0 +1,8 @@
+{
+    "group":"timeStamp",
+    "fields":{
+        "message":"msg",
+        "timestamp":"timeReported"
+    },
+    "statement": "WHERE \"msg\" LIKE '%Обновление состояния%'  AND \"msg\" SIMILAR TO %($$_device_list_$$)%' "
+}

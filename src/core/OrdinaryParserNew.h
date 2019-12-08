@@ -1,5 +1,5 @@
 /** @file
- * @brief     Titan device parser declaration
+ * @brief     Ordinary devices parser declaration
  *
  * @ingroup   MANTIS
  *
@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Parser.h"
+#include "Configuration.h"
 
 #include <map>
 #include <vector>
@@ -16,11 +17,15 @@
 
 namespace mantis
 {
-
-class TitanParser: public Parser
+/**
+ * @brief The OrdinaryParserNew class using for parsing for Ordinary device group
+ */
+class OrdinaryParserNew: public Parser
 {
 
 public:
+
+    explicit OrdinaryParserNew(ParserConfiguration configuration = ParserConfiguration());
 
     /**
      * Reimplemented from Parser
@@ -34,8 +39,9 @@ public:
 
     std::map<QString, QString> parseMessage(const QString &message);
 
+    ParserConfiguration& config();
 private:
-    std::map<int, QString> m_states;
+    ParserConfiguration m_conf;
 };
 
 } // namespace mantis

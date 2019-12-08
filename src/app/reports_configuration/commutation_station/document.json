@@ -1,0 +1,27 @@
+{
+    "useDefaults":true,
+    "simpleReport":
+    {
+        "title": "Опциональное название простого отчета",
+        "titleCell": "A1",
+        "infoCell": "A2",
+        "titleRange": "A1:C1",
+        "infoRange": "A2:C2",
+        "headers": ["Опциональный столбец 1", "Опциональный столбец 2", "Опциональный столбец 3"],
+        "headersRow":3,
+        "reportTableStartPosition": 4,
+        "infoString": "Опциональная строка информации простого отчета"
+    },
+    "timeReport":
+    {
+        "title": "Опциональное название отчета по времени",
+        "titleCell": "A1",
+        "infoCell": "A2",
+        "titleRange": "A1:D1",
+        "infoRange": "A2:D2",
+        "headers": ["Наименование", "Состояние", "Кол-во переходов", "Общее время в состоянии"],
+        "headersRow":3,
+        "reportTableStartPosition": 4,
+        "infoString": "Опциональная строка информации отчета по времени"
+    }
+}

@@ -47,48 +47,10 @@ const auto INFO_RANGE = "infoRange";
 const auto STANDARD_RANGE_TITLE = "A1:C1";
 const auto STANDARD_RANGE_INFO = "A2:C2";
 
-const auto ISB_SIMPLE_RANGE_TITLE = "A1:G1";
-const auto ISB_SIMPLE_RANGE_INFO = "A2:G2";
-
-const auto ISB_TIME_REPORT_RANGE_TITLE = "A1:D1";
-const auto ISB_TIME_REPORT_RANGE_INFO = "A2:D2";
+const auto TIME_REPORT_RANGE_TITLE = "A1:D1";
+const auto TIME_REPORT_RANGE_INFO = "A2:D2";
 
 } // ranges
-
-std::map<QString, QString> getFormatRanges(Headers type, QString subtype)
-{
-    using namespace ranges;
-    switch (type)
-    {
-    case Headers::STANDARD:
-        return subtype == SIMPLE_REPORT ? std::map<QString, QString>{ { TITLE_RANGE, STANDARD_RANGE_TITLE },
-                 { INFO_RANGE, STANDARD_RANGE_INFO } } :
-        std::map<QString, QString>{{ TITLE_RANGE, ISB_TIME_REPORT_RANGE_TITLE },
-        { INFO_RANGE, ISB_TIME_REPORT_RANGE_INFO }};
-    case Headers::ISB:
-        return subtype == SIMPLE_REPORT
-                   ? std::map<QString, QString>{ { TITLE_RANGE,
-                                                   ISB_SIMPLE_RANGE_TITLE },
-                                                 { INFO_RANGE,
-                                                   ISB_SIMPLE_RANGE_INFO } }
-                   : std::map<QString, QString>{
-                         { TITLE_RANGE, ISB_TIME_REPORT_RANGE_TITLE },
-                         { INFO_RANGE, ISB_TIME_REPORT_RANGE_INFO }
-                     };
-    case Headers::TITAN:
-        return subtype == SIMPLE_REPORT
-                   ? std::map<QString, QString>{ { TITLE_RANGE,
-                                                   STANDARD_RANGE_TITLE },
-                                                 { INFO_RANGE,
-                                                   STANDARD_RANGE_TITLE } }
-                   : std::map<QString, QString>{
-                         { TITLE_RANGE, ISB_TIME_REPORT_RANGE_TITLE },
-                         { INFO_RANGE, ISB_TIME_REPORT_RANGE_INFO }
-                     };
-    default:
-        return {};
-    }
-}
 
 QString createReportInfo(QString beginDate, QString endDate)
 {
@@ -114,92 +76,137 @@ QString createPath(const QString& reportId, const QString& reportSubtype)
     return path;
 }
 
-Headers getHeadersType(QString id)
+QStringList getDefaultHeaders(QString subtype)
 {
-    std::map<QString, Headers> headersType{
-        { device_id::COMMUTATION_STATION, Headers::STANDARD },
-        { device_id::LOUDSPEAKER, Headers::STANDARD },
-        { device_id::SNMP, Headers::STANDARD },
-        { device_groups::TITAN, Headers::TITAN },
-        { device_groups::ISB, Headers::ISB }
+    auto headers = std::map<QString, QStringList>{
+        { SIMPLE_REPORT,
+          QStringList{
+              "Наименование", "Состояние", "Время перехода в состояние" } },
+        { TIME_REPORT,
+          { "Наименование",
+            "Состояние",
+            "Кол-во переходов",
+            "Общее время в состоянии" } }
     };
 
-    return headersType[id];
+    return headers.at(subtype);
 }
 
-QStringList getHeaders(Headers type, QString subtype)
+std::map<QString, QString> getDefaultFormatRanges(QString subtype)
 {
-    static const auto headers = std::map<
-        Headers,
-        std::map<QString, QStringList>>{
-        { Headers::STANDARD,
-          { { SIMPLE_REPORT,
-              { "Наименование", "Состояние", "Время перехода в состояние" } },
-            { TIME_REPORT,
-              { "Наименование", "Состояние", "Количество","Общее время в состоянии" } } } },
-        { Headers::TITAN,
-          { { SIMPLE_REPORT,
-              { "Наименование", "Состояние", "Время перехода в состояние" } },
-            { TIME_REPORT,
-              { "Наименование", "Состояние", "Кол-во переходов", "Общее время в состоянии" } } } },
-
-        { Headers::ISB,
-          { { SIMPLE_REPORT,
-              { "Размещение",
-                "Тип",
-                "Идентификатор",
-                "Сквозной идентификатор",
-                "Состояние",
-                "Заряд батареи (только для UPS)" } },
-            { TIME_REPORT,
-              { "Название устройства (Расположение, Тип, Ун. ид., Сквозной "
-                "ид.)",
-                "Состояние",
-                "Переходы в состояние",
-                "Общее время в состоянии" } } } }
-    };
-
-    return headers.at(type).at(subtype);
+    using namespace ranges;
+    return subtype == SIMPLE_REPORT
+               ? std::map<QString, QString>{ { TITLE_RANGE,
+                                               STANDARD_RANGE_TITLE },
+                                             { INFO_RANGE,
+                                               STANDARD_RANGE_INFO } }
+               : std::map<QString, QString>{
+                     { TITLE_RANGE, TIME_REPORT_RANGE_TITLE },
+                     { INFO_RANGE, TIME_REPORT_RANGE_INFO }
+                 };
 }
 
-std::shared_ptr<QXlsx::Document> createDocument(const std::shared_ptr<Report>& report)
+std::map<QString, QString> createFormatRanges(QString subtype, DocumentConfiguration config)
+{
+    using namespace ranges;
+    auto ranges = std::map<QString, QString>{};
+
+    if(config.titleRange.is_initialized() & config.infoRange.is_initialized())
+    {
+            ranges = { { TITLE_RANGE,
+                         QString::fromStdString(*config.titleRange) },
+                       { INFO_RANGE,
+                         QString::fromStdString(*config.infoRange)} };
+    }
+    else {
+        ranges = getDefaultFormatRanges(subtype);
+    }
+
+    return ranges;
+}
+
+std::shared_ptr<QXlsx::Document> createDocument(const std::shared_ptr<Report>& report, const DocumentConfiguration& conf)
 {
     QTXLSX_USE_NAMESPACE
 
     auto document = std::make_shared<QXlsx::Document>();
-    auto headersType
-        = getHeadersType(report->id());
-    auto headers = getHeaders(headersType, report->subtype());
-    auto formatRanges = getFormatRanges(headersType, report->subtype());
-    auto reportInfo = createReportInfo(report->beginDate(), report->endDate());
-    document->write(cells::TITLE_CELL, report->title());
-    document->write(cells::INFO_CELL, reportInfo);
-
-    Format titleFormat;
-    titleFormat.setHorizontalAlignment(Format::AlignHCenter);
-    titleFormat.setVerticalAlignment(Format::AlignVCenter);
-    auto headersFormat = titleFormat;
-    headersFormat.setFontBold(true);
-
-    document->mergeCells(formatRanges.at(ranges::TITLE_RANGE), headersFormat);
-    document->mergeCells(formatRanges.at(ranges::INFO_RANGE), titleFormat);
-
-    auto columnCounter = 1;
-
-    for (const auto& columnName: headers)
+    if(conf.useDefaults)
     {
-        document->setColumnWidth(columnCounter, columnName.length() + 10);
-        document->write(cells::HEADERS_ROW, columnCounter, columnName, headersFormat);
-        ++columnCounter;
+        auto headers = getDefaultHeaders(report->subtype());
+        auto formatRanges = getDefaultFormatRanges(report->subtype());
+        auto reportInfo = createReportInfo(report->beginDate(), report->endDate());
+        document->write(cells::TITLE_CELL, report->title());
+        document->write(cells::INFO_CELL, reportInfo);
+
+        Format titleFormat;
+        titleFormat.setHorizontalAlignment(Format::AlignHCenter);
+        titleFormat.setVerticalAlignment(Format::AlignVCenter);
+        auto headersFormat = titleFormat;
+        headersFormat.setFontBold(true);
+
+        document
+            ->mergeCells(formatRanges.at(ranges::TITLE_RANGE), headersFormat);
+        document->mergeCells(formatRanges.at(ranges::INFO_RANGE), titleFormat);
+
+        auto columnCounter = 1;
+
+        for (const auto& columnName : headers)
+        {
+            document->setColumnWidth(columnCounter, columnName.length() + 20);
+            document->write(
+                cells::HEADERS_ROW, columnCounter, columnName, headersFormat);
+            ++columnCounter;
+        }
+    }
+    else
+    {
+        auto headers = conf.headers ? *conf.headers
+                                    : getDefaultHeaders(report->subtype());
+        auto formatRanges = createFormatRanges(report->subtype(), conf);
+        auto reportInfo
+            = conf.infoString
+                  ? QString::fromStdString(*conf.infoString)
+                  : createReportInfo(report->beginDate(), report->endDate());
+        document->write(
+            conf.titleCell ? QString::fromStdString(*conf.titleCell)
+                           : cells::TITLE_CELL, conf.title ? QString::fromStdString(*conf.title) :
+            report->title());
+        document->write(conf.infoCell ? QString::fromStdString(*conf.infoCell) : cells::INFO_CELL, reportInfo);
+
+        Format titleFormat;
+        titleFormat.setHorizontalAlignment(Format::AlignHCenter);
+        titleFormat.setVerticalAlignment(Format::AlignVCenter);
+        auto headersFormat = titleFormat;
+        headersFormat.setFontBold(true);
+
+        document->mergeCells(formatRanges.at(ranges::TITLE_RANGE), headersFormat);
+        document->mergeCells(formatRanges.at(ranges::INFO_RANGE), titleFormat);
+
+        auto columnCounter = 1;
+
+        for (const auto& columnName: headers)
+        {
+            document->setColumnWidth(columnCounter, columnName.length() + 20);
+            document->write(conf.headersRow ? *conf.headersRow : cells::HEADERS_ROW, columnCounter, columnName, headersFormat);
+            ++columnCounter;
+        }
     }
 
     return document;
 }
 
 void writeReportTableToDocument(std::shared_ptr<QXlsx::Document> document,
-                                std::shared_ptr<Report> report)
+                                std::shared_ptr<Report> report, const DocumentConfiguration& conf)
 {
     auto rowCounter = cells::REPORT_TABLE_START_POSITION;
+
+    if(!conf.useDefaults)
+    {
+        if(conf.reportTableStartPosition)
+        {
+            rowCounter = *conf.reportTableStartPosition;
+        }
+    }
 
     for(const auto& row : report->getReportTable())
     {
@@ -215,8 +222,8 @@ void writeReportTableToDocument(std::shared_ptr<QXlsx::Document> document,
 
 } // anonymous
 
-ReportWriter::ReportWriter(std::shared_ptr<Report> report):
-    m_report(report)
+ReportWriter::ReportWriter(std::shared_ptr<Report> report, const DocumentConfiguration &config):
+    m_report(report), m_conf(config)
 {
 
 }
@@ -225,8 +232,8 @@ void ReportWriter::writeReportToFile()
 {
     QTXLSX_USE_NAMESPACE
 
-    auto document = createDocument(m_report);
-    writeReportTableToDocument(document, m_report);
+    auto document = createDocument(m_report, m_conf);
+    writeReportTableToDocument(document, m_report, m_conf);
 
     auto path = createPath(m_report->id(), m_report->subtype());
     auto fileName = createFileName();

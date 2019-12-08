@@ -19,7 +19,7 @@ QML_IMPORT_PATH =
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
-copydata.commands = $(COPY_DIR) $$PWD/device_list.json $$PWD/config.json $$PWD/ordinaryParser.json $$OUT_PWD
+copydata.commands = $(COPY_DIR) $$PWD/device_list.json $$PWD/config.json $$PWD/reports_configuration $$PWD/ordinaryParser.json $$OUT_PWD
 first.depends = $(first) copydata
 export(first.depends)
 export(copydata.commands)
